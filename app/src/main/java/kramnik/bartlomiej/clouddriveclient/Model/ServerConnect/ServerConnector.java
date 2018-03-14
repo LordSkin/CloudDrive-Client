@@ -27,4 +27,8 @@ public interface ServerConnector {
     boolean rename(String url, String newName);
 
     boolean addFile(File file, String url) throws IOException;
+
+    boolean addFolder(String url) throws IOException;
+
+    boolean ping();
 }

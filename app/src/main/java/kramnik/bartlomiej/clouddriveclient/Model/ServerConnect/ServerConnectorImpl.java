@@ -32,20 +32,24 @@ import okhttp3.internal.http.HttpMethod;
 public class ServerConnectorImpl implements ServerConnector {
 
     private OkHttpClient client;
+    private String baseAddress;
     Context context;
 
-    public ServerConnectorImpl(Context context) {
+    public ServerConnectorImpl(Context context, String baseAddress) {
+        this.baseAddress = baseAddress;
         client = new OkHttpClient();
         this.context = context;
     }
 
-    public ServerConnectorImpl() {
+    public ServerConnectorImpl(String baseAddress) {
+        this.baseAddress = baseAddress;
         client = new OkHttpClient();
     }
 
     @Override
     public void getFile(String url, String name, ProgressIndicator indicator) throws IOException {
-        Call call = client.newCall(new Request.Builder().url(url).get().build());
+
+        Call call = client.newCall(new Request.Builder().url(baseAddress+"/get/"+url).get().build());
 
         Response response = call.execute();
         if (response.code() == 200 || response.code() == 201) {
@@ -87,7 +91,7 @@ public class ServerConnectorImpl implements ServerConnector {
 
     @Override
     public File getFile(String url, String name) throws IOException {
-        Call call = client.newCall(new Request.Builder().url(url).get().build());
+        Call call = client.newCall(new Request.Builder().url(baseAddress+"/get/"+url).get().build());
 
         Response response = call.execute();
         if (response.code() == 200 || response.code() == 201) {
@@ -128,7 +132,7 @@ public class ServerConnectorImpl implements ServerConnector {
     @Override
     public List<FileDetails> getList(String url) throws IOException {
         Request request = new Request.Builder()
-                .url(url)
+                .url(baseAddress+"/list/"+url)
                 .build();
 
         Response response = client.newCall(request).execute();
@@ -139,7 +143,7 @@ public class ServerConnectorImpl implements ServerConnector {
     @Override
     public boolean delete(String url) throws IOException {
         Request request = new Request.Builder()
-                .url(url)
+                .url(baseAddress+url)
                 .delete()
                 .build();
         Response response = client.newCall(request).execute();
@@ -157,11 +161,37 @@ public class ServerConnectorImpl implements ServerConnector {
         RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("file", "file", RequestBody.create(MediaType.parse("other"), file))
                 .build();
-        Request request = new Request.Builder().url(url).post(requestBody).build();
+        Request request = new Request.Builder().url(baseAddress+url).post(requestBody).build();
 
         Response response = client.newCall(request).execute();
 
         return response.code()==200||response.code()==201;
+    }
+
+    @Override
+    public boolean addFolder(String url) throws IOException {
+        Request request = new Request.Builder()
+                .url(baseAddress+"/folder/"+url)
+                .post(null)
+                .build();
+        Response response = client.newCall(request).execute();
+        return response.code()==200||response.code()==201;
+    }
+
+    @Override
+    public boolean ping() {
+        try{
+            Request request = new Request.Builder()
+                    .url(baseAddress)
+                    .delete()
+                    .build();
+            Response response = client.newCall(request).execute();
+            return response.code()==200||response.code()==201;
+        }
+        catch (IOException e){
+            return false;
+        }
+
     }
 
 }

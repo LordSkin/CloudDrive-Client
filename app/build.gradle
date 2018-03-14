@@ -28,7 +28,31 @@ dependencies {
 
     compile 'com.squareup.okhttp3:okhttp:3.10.0'    //OkHttp
 
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.7' //Gson
+
+    // powerMock
+    testCompile "org.powermock:powermock-module-junit4:1.6.6"
+    testCompile "org.powermock:powermock-module-junit4-rule:1.6.6"
+    testCompile "org.powermock:powermock-api-mockito:1.6.6"
+    testCompile "org.powermock:powermock-classloading-xstream:1.6.6"
+
+    testCompile 'org.json:json:20160810'    //Json
+
+    compile 'com.android.support:design:26.1.0' //FloatingactionButton
+
     //RxAndroid
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.x.x'
+
+    //room
+    implementation "android.arch.persistence.room:runtime:1.0.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+    testImplementation "android.arch.persistence.room:testing:1.0.0"
+
+    //dagger
+    compile 'com.google.dagger:dagger-android:2.14'
+    compile 'com.google.dagger:dagger-android-support:2.14'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.14'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.14'
+
 }
