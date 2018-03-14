@@ -8,4 +8,10 @@ public interface SelectDriveView {
 
     void updateList();
 
+    void showLoading();
+
+    void hideLoading();
+
+
+
 }

@@ -188,7 +188,7 @@ public class ServerConnectorImpl implements ServerConnector {
             Response response = client.newCall(request).execute();
             return response.code()==200||response.code()==201;
         }
-        catch (IOException e){
+        catch (Exception e){
             return false;
         }
 

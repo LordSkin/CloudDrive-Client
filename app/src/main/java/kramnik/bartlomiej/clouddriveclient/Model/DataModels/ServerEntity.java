@@ -11,6 +11,11 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity
 public class ServerEntity {
 
+    public ServerEntity(String name, String ip) {
+        this.name = name;
+        this.ip = ip;
+    }
+
     @PrimaryKey(autoGenerate = true)
     private int id;
 
