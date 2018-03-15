@@ -19,7 +19,6 @@ public class ServersList {
 
     public ServersList(Context context) {
         dataBase = Room.databaseBuilder(context, ServerDataBase.class, "testDataBase1").build();
-        dataBase.serversDao().addServer(new ServerEntity("name1","ip1"));
         servers = dataBase.serversDao().getAll();
     }
 
@@ -47,11 +46,13 @@ public class ServersList {
     }
 
     public void deleteServer(ServerEntity serverEntity){
+        if (serverEntity==null) throw new NullPointerException();
         servers.remove(serverEntity);
         dataBase.serversDao().deleteServer(serverEntity);
     }
 
     public void addServer(ServerEntity serverEntity){
+        if (serverEntity==null) throw new NullPointerException();
         servers.add(serverEntity);
         dataBase.serversDao().addServer(serverEntity);
     }
