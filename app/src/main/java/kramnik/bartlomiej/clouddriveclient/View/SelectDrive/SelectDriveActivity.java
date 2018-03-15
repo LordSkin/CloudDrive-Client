@@ -68,6 +68,11 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
         presenter.setSelectDriveView(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.setSelectDriveView(this);
+    }
 
     @Override
     public void onClick(View view) {
@@ -77,7 +82,12 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void updateList() {
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override

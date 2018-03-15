@@ -42,7 +42,7 @@ public class AddServerDialog extends DialogFragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                presenter.addServer(new ServerEntity(name.getText().toString(), address.getText()+":"+port.getText()));
+                presenter.addServer(new ServerEntity(name.getText().toString(), "http:\\\\"+address.getText()+":"+port.getText()));
             }
         });
 

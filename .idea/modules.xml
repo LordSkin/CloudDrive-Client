@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CloudDrive-Client.iml" filepath="$PROJECT_DIR$/CloudDrive-Client.iml" />
+      <module fileurl="file://A:\Desktop\CloudDriveCLient\CloudDrive-Client.iml" filepath="A:\Desktop\CloudDriveCLient\CloudDrive-Client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CloudDriveCLient.iml" filepath="$PROJECT_DIR$/CloudDriveCLient.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

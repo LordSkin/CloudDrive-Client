@@ -2,17 +2,12 @@ package kramnik.bartlomiej.clouddriveclient.Presenter;
 
 import android.content.Context;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
-import kramnik.bartlomiej.clouddriveclient.Model.DataBase.ServerDataBase;
-import kramnik.bartlomiej.clouddriveclient.Model.DataBase.ServersDao;
 import kramnik.bartlomiej.clouddriveclient.Model.DataBase.ServersList;
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.ServerEntity;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnector;
@@ -35,12 +30,14 @@ public class AppPresenter implements ListAdapterDataSource, SelectDrivePresenter
 
     private SelectDriveView selectDriveView;
 
-    private PublishSubject<ServerEntity> serversObservable;
+    private PublishSubject<ServerEntity> addServerObservable;
+
+    private PublishSubject<ServerEntity> pingServersObservable;
 
     public AppPresenter() {
 
-        serversObservable = PublishSubject.create();
-        serversObservable.observeOn(Schedulers.newThread())
+        pingServersObservable = PublishSubject.create();
+        pingServersObservable.observeOn(Schedulers.newThread())
                 .subscribe(new Observer<ServerEntity>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -63,6 +60,34 @@ public class AppPresenter implements ListAdapterDataSource, SelectDrivePresenter
 
                     }
                 });
+
+        addServerObservable = PublishSubject.create();
+
+        addServerObservable.observeOn(Schedulers.newThread())
+                .subscribe(new Observer<ServerEntity>(){
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(ServerEntity serverEntity) {
+                        serversList.addServer(serverEntity);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
     }
 
     @Override
@@ -78,20 +103,24 @@ public class AppPresenter implements ListAdapterDataSource, SelectDrivePresenter
     @Override
     public void setSelectDriveView(SelectDriveView view) {
         this.selectDriveView = view;
+        refreshStatus();
+    }
 
+    @Override
+    public void addServer(ServerEntity serverEntity) {
+        addServerObservable.onNext(serverEntity);
+        refreshStatus();
+    }
+
+    private void refreshStatus(){
         selectDriveView.showLoading();
 
         for(ServerEntity serverEntity : serversList.getServers()){
-            serversObservable.onNext(serverEntity);
+            pingServersObservable.onNext(serverEntity);
         }
 
         selectDriveView.updateList();
 
         selectDriveView.hideLoading();
-    }
-
-    @Override
-    public void addServer(ServerEntity serverEntity) {
-        serversList.addServer(serverEntity);
     }
 }

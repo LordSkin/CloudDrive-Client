@@ -183,7 +183,7 @@ public class ServerConnectorImpl implements ServerConnector {
         try{
             Request request = new Request.Builder()
                     .url(baseAddress)
-                    .delete()
+                    .get()
                     .build();
             Response response = client.newCall(request).execute();
             return response.code()==200||response.code()==201;
