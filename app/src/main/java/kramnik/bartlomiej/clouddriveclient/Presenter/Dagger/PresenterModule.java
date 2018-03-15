@@ -9,6 +9,7 @@ import kramnik.bartlomiej.clouddriveclient.Model.DataBase.ServerDataBase;
 import kramnik.bartlomiej.clouddriveclient.Model.DataBase.ServersList;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnector;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnectorImpl;
+import kramnik.bartlomiej.clouddriveclient.Presenter.AddServerPresenter;
 
 /**
  * Dagger module for presenter
@@ -36,4 +37,5 @@ public class PresenterModule {
     public Context getContext() {
         return context;
     }
+
 }

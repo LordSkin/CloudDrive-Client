@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">CloudDriveCLient</string>
+    <string name="app_name">CloudDriveClient</string>
+    <string name="ServerName">Nazwa dysku</string>
+    <string name="serverAddress">adres IP</string>
+    <string name="serverPort">port</string>
+    <string name="addServerDialog">Dodaj nowy dysk</string>
 </resources>

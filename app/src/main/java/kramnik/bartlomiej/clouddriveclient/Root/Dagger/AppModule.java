@@ -4,6 +4,7 @@ import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
+import kramnik.bartlomiej.clouddriveclient.Presenter.AddServerPresenter;
 import kramnik.bartlomiej.clouddriveclient.Presenter.AppPresenter;
 import kramnik.bartlomiej.clouddriveclient.Presenter.ListAdapterDataSource;
 import kramnik.bartlomiej.clouddriveclient.Presenter.SelectDrivePresenter;
@@ -36,6 +37,11 @@ public class AppModule {
 
     @Provides
     public SelectDrivePresenter getSelectDrivePresenter(){
+        return presenter;
+    }
+
+    @Provides
+    public AddServerPresenter getAddServerpresenter(){
         return presenter;
     }
 }

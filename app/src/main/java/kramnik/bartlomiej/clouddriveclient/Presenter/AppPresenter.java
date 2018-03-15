@@ -23,7 +23,7 @@ import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.SelectDriveView;
  * App presenter implementation
  */
 
-public class AppPresenter implements ListAdapterDataSource, SelectDrivePresenter {
+public class AppPresenter implements ListAdapterDataSource, SelectDrivePresenter, AddServerPresenter {
 
     @Inject
     Context context;
@@ -88,5 +88,10 @@ public class AppPresenter implements ListAdapterDataSource, SelectDrivePresenter
         selectDriveView.updateList();
 
         selectDriveView.hideLoading();
+    }
+
+    @Override
+    public void addServer(ServerEntity serverEntity) {
+        serversList.addServer(serverEntity);
     }
 }

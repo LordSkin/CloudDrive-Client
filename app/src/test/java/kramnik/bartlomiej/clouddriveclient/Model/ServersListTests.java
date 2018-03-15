@@ -23,7 +23,7 @@ public class ServersListTests {
     ServersList testObject;
 
     @Before
-    public void prepare(){
+    public void prepare() {
 
         ServerDataBase dataBase = Mockito.mock(ServerDataBase.class);
         ServersDao dao = Mockito.mock(ServersDao.class);
@@ -35,17 +35,17 @@ public class ServersListTests {
     }
 
     @Test(expected = NullPointerException.class)
-    public void addNullTest(){
+    public void addNullTest() {
         testObject.addServer(null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void deleteNullTest(){
+    public void deleteNullTest() {
         testObject.deleteServer(null);
     }
 
     @Test
-    public void addTest(){
+    public void addTest() {
         testObject.addServer(new ServerEntity("name", "ip"));
         testObject.addServer(new ServerEntity("name", "ip"));
 
@@ -53,7 +53,7 @@ public class ServersListTests {
     }
 
     @Test
-    public void deleteTest(){
+    public void deleteTest() {
         testObject.addServer(new ServerEntity("name", "ip"));
         testObject.addServer(new ServerEntity("name", "ip"));
 
@@ -64,7 +64,7 @@ public class ServersListTests {
     }
 
     @Test
-    public void getAllTest(){
+    public void getAllTest() {
         ServerEntity testServer = new ServerEntity("test", "ip");
 
         testObject.addServer(testServer);
@@ -72,7 +72,6 @@ public class ServersListTests {
         Assert.assertEquals(testServer, testObject.getServers().get(0));
         Assert.assertEquals(1, testObject.getServers().size());
     }
-
 
 
 }

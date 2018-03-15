@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Looper;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.FloatProperty;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +35,7 @@ import kramnik.bartlomiej.clouddriveclient.Presenter.SelectDrivePresenter;
 import kramnik.bartlomiej.clouddriveclient.R;
 import kramnik.bartlomiej.clouddriveclient.Root.App;
 import kramnik.bartlomiej.clouddriveclient.Root.Dagger.AppComponent;
+import kramnik.bartlomiej.clouddriveclient.View.Dialogs.AddServerDialog;
 import kramnik.bartlomiej.clouddriveclient.View.ProgressIndicator;
 
 public class SelectDriveActivity extends AppCompatActivity implements View.OnClickListener, SelectDriveView {
@@ -40,6 +43,7 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
     private ProgressBar progressBar;
     private ListView listView;
     private DrivesListAdapter listAdapter;
+    FloatingActionButton addButton;
 
     @Inject
     SelectDrivePresenter presenter;
@@ -56,6 +60,9 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         listView = (ListView)findViewById(R.id.listView);
+        addButton = (FloatingActionButton)findViewById(R.id.addButton);
+
+        addButton.setOnClickListener(this);
         listView.setAdapter(listAdapter);
 
         presenter.setSelectDriveView(this);
@@ -64,7 +71,8 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View view) {
-
+        AddServerDialog dialog = new AddServerDialog();
+        dialog.show(getFragmentManager(), getResources().getString(R.string.addServerDialog));
     }
 
     @Override
