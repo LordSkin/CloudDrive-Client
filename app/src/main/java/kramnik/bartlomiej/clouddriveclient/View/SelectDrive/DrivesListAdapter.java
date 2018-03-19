@@ -11,7 +11,7 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.ServerEntity;
-import kramnik.bartlomiej.clouddriveclient.Presenter.ListAdapterDataSource;
+import kramnik.bartlomiej.clouddriveclient.Presenter.DrivesListAdapterDataSource;
 import kramnik.bartlomiej.clouddriveclient.R;
 
 /**
@@ -23,7 +23,7 @@ public class DrivesListAdapter extends BaseAdapter {
     private LayoutInflater inflater;
 
     @Inject
-    ListAdapterDataSource source;
+    DrivesListAdapterDataSource source;
 
     @Inject
     Context context;

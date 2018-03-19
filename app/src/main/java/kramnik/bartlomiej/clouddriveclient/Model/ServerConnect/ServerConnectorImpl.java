@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
+import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
 import kramnik.bartlomiej.clouddriveclient.View.ProgressIndicator;
 import okhttp3.Call;
 import okhttp3.Headers;
@@ -130,14 +131,14 @@ public class ServerConnectorImpl implements ServerConnector {
     }
 
     @Override
-    public List<FileDetails> getList(String url) throws IOException {
+    public List<FileDetails> getList(String url, JsonConverter converter) throws IOException {
         Request request = new Request.Builder()
                 .url(baseAddress+"/list/"+url)
                 .build();
 
         Response response = client.newCall(request).execute();
         String s = response.body().string();
-        return null;
+        return converter.getFilesList(s);
     }
 
     @Override

@@ -2,6 +2,8 @@ package kramnik.bartlomiej.clouddriveclient.Root.Dagger;
 
 import dagger.Component;
 import kramnik.bartlomiej.clouddriveclient.View.Dialogs.AddServerDialog;
+import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListActivity;
+import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListAdapter;
 import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.DrivesListAdapter;
 import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.SelectDriveActivity;
 
@@ -17,4 +19,8 @@ public interface AppComponent {
     void inject(SelectDriveActivity selectDriveActivity);
 
     void inject(AddServerDialog dialog);
+
+    void inject(FilesListAdapter adapter);
+
+    void inject(FilesListActivity filesListActivity);
 }

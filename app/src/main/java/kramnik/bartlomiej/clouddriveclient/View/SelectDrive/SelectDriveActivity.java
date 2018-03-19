@@ -1,6 +1,7 @@
 package kramnik.bartlomiej.clouddriveclient.View.SelectDrive;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.util.FloatProperty;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -36,9 +38,10 @@ import kramnik.bartlomiej.clouddriveclient.R;
 import kramnik.bartlomiej.clouddriveclient.Root.App;
 import kramnik.bartlomiej.clouddriveclient.Root.Dagger.AppComponent;
 import kramnik.bartlomiej.clouddriveclient.View.Dialogs.AddServerDialog;
+import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListActivity;
 import kramnik.bartlomiej.clouddriveclient.View.ProgressIndicator;
 
-public class SelectDriveActivity extends AppCompatActivity implements View.OnClickListener, SelectDriveView {
+public class SelectDriveActivity extends AppCompatActivity implements View.OnClickListener, SelectDriveView, AdapterView.OnItemClickListener {
 
     private ProgressBar progressBar;
     private ListView listView;
@@ -64,6 +67,7 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
 
         addButton.setOnClickListener(this);
         listView.setAdapter(listAdapter);
+        listView.setOnItemClickListener(this);
 
         presenter.setSelectDriveView(this);
     }
@@ -110,5 +114,12 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        presenter.itemSelected(i);
+        Intent intent = new Intent(this, FilesListActivity.class);
+        startActivity(intent);
     }
 }

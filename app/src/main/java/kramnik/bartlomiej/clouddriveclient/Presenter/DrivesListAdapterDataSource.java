@@ -9,7 +9,7 @@ import kramnik.bartlomiej.clouddriveclient.Model.DataModels.ServerEntity;
  * Created by Mao on 13.03.2018.
  */
 
-public interface ListAdapterDataSource {
+public interface DrivesListAdapterDataSource {
 
     ServerEntity getServer(int i);
 

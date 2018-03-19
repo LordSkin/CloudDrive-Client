@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
+import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
 import kramnik.bartlomiej.clouddriveclient.View.ProgressIndicator;
 
 /**
@@ -20,7 +21,7 @@ public interface ServerConnector {
 
     File getFile(String url, String name) throws  IOException;
 
-    List<FileDetails> getList(String url) throws IOException;
+    List<FileDetails> getList(String url, JsonConverter converter) throws IOException;
 
     boolean delete(String url) throws IOException;
 
