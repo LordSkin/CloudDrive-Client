@@ -152,7 +152,7 @@ public class ServerConnectorImpl implements ServerConnector {
     }
 
     @Override
-    public boolean rename(String url, String newName) {
+    public boolean rename(String url, String newName) throws IOException {
         // TODO: 11.03.2018  
         return false;
     }

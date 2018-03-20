@@ -22,7 +22,7 @@ public class ServersList {
         servers = dataBase.serversDao().getAll();
     }
 
-    public ServersList(ServerDataBase dataBase, Context context) {
+    public ServersList(ServerDataBase dataBase) {
         this.dataBase = dataBase;
         this.
         servers = dataBase.serversDao().getAll();

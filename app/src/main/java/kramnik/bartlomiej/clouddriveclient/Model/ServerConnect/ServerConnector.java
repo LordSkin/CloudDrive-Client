@@ -25,7 +25,7 @@ public interface ServerConnector {
 
     boolean delete(String url) throws IOException;
 
-    boolean rename(String url, String newName);
+    boolean rename(String url, String newName) throws IOException;
 
     boolean addFile(File file, String url) throws IOException;
 
