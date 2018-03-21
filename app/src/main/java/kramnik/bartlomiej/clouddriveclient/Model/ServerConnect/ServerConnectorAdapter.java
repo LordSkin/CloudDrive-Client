@@ -29,12 +29,12 @@ public class ServerConnectorAdapter {
     }
 
     public void getFile(String name, ProgressIndicator indicator) throws IOException {
-        serverConnector.getFile(path+name, name,indicator);
+        serverConnector.getFile(path + name, name, indicator);
     }
 
     public File getFile(String name) throws IOException {
-        if (name==null) throw new NullPointerException();
-        return serverConnector.getFile(path+name, name);
+        if (name == null) throw new NullPointerException();
+        return serverConnector.getFile(path + name, name);
     }
 
     public List<FileDetails> getList() throws IOException {
@@ -42,38 +42,37 @@ public class ServerConnectorAdapter {
     }
 
     public boolean delete(String name) throws IOException {
-        if (name==null) throw new NullPointerException();
-        return serverConnector.delete(path+name);
+        if (name == null) throw new NullPointerException();
+        return serverConnector.delete(path + name);
     }
 
     public boolean rename(String name, String newName) throws IOException {
-        return serverConnector.rename(path+name, newName);
+        return serverConnector.rename(path + name, newName);
     }
 
     public boolean addFile(File file, String name) throws IOException {
-        if (name==null) throw new NullPointerException();
-        return serverConnector.addFile(file, path+name);
+        if (name == null) throw new NullPointerException();
+        return serverConnector.addFile(file, path + name);
     }
 
     public boolean addFolder(String name) throws IOException {
-        if (name==null) throw new NullPointerException();
-        return serverConnector.addFolder(path+name);
+        if (name == null) throw new NullPointerException();
+        return serverConnector.addFolder(path + name);
     }
 
-    public List<FileDetails> goUp() throws IOException {
+    public void goUp() {
         int ind = path.lastIndexOf(fileSeparator);
-        if (ind>=0)path = path.substring(0, ind);
-        return getList();
+        if (ind >= 0) path = path.substring(0, ind);
     }
 
-    public boolean isBaseFolder(){
+    public boolean isBaseFolder() {
         return path.equals("");
     }
 
     public List<FileDetails> goTo(String name) throws IOException {
-        if (name==null) throw new NullPointerException();
-        List<FileDetails> result = serverConnector.getList(path+fileSeparator+name, converter);
-        path +=fileSeparator+name;
+        if (name == null) throw new NullPointerException();
+        List<FileDetails> result = serverConnector.getList(path + fileSeparator + name, converter);
+        path += fileSeparator + name;
         return result;
     }
 

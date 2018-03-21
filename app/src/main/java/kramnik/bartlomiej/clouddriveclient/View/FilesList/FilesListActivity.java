@@ -19,7 +19,9 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
     private ProgressBar progressBar;
     private ListView listView;
     private FilesListAdapter adapter;
-    private FloatingActionButton fab;
+    private FloatingActionButton addButton;
+    private FloatingActionButton backButton;
+
 
     @Inject
     FilesListPresenter presenter;
@@ -31,8 +33,11 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar2);
         listView = (ListView) findViewById(R.id.listView);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(this);
+        addButton = (FloatingActionButton) findViewById(R.id.addButton);
+        backButton = (FloatingActionButton) findViewById(R.id.backButton);
+
+        addButton.setOnClickListener(this);
+        backButton.setOnClickListener(this);
 
         ((App) getApplication()).getAppComponent().inject(this);
 
@@ -79,6 +84,11 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
 
     @Override
     public void onClick(View view) {
-
+        if(view.getId()==addButton.getId()){
+            // TODO: 21.03.18
+        }
+        if (view.getId()==backButton.getId()){
+            presenter.goBack();
+        }
     }
 }

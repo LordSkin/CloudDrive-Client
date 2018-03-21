@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.ServerEntity;
 import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnector;
+import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnectorAdapter;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnectorImpl;
 import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListView;
 import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.SelectDriveView;
@@ -35,7 +37,7 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     @Inject
     ServersList serversList;
 
-    private ServerConnector connector;
+    private ServerConnectorAdapter serverConnectorAdapter;
 
     private SelectDriveView selectDriveView;
 
@@ -43,28 +45,26 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
     private PublishSubject<ServerEntity> addServerObservable;
 
-    private PublishSubject<Void> pingServersObservable;
+    private PublishSubject<String> pingServersObservable;
 
     private PublishSubject<String> filesListObservable;
 
     private List<FileDetails> actualFiles;
 
-    private String directoryPath;
 
     public AppPresenter() {
 
-        directoryPath = "";
         actualFiles = new ArrayList<FileDetails>();
         pingServersObservable = PublishSubject.create();
         pingServersObservable.observeOn(Schedulers.newThread())
-                .subscribe(new Observer<Void>() {
+                .subscribe(new Observer<String>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(Void v) {
+                    public void onNext(String v) {
 
                         selectDriveView.showLoading();
 
@@ -127,10 +127,10 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
                     }
 
                     @Override
-                    public void onNext(String path) {
+                    public void onNext(String v) {
                         try {
                             filesListView.showLoading();
-                            actualFiles = connector.getList(path, new JsonConverter(new Gson()));
+                            actualFiles = serverConnectorAdapter.getList();
                             filesListView.hideLoading();
                             filesListView.refreshView();
                         }
@@ -172,8 +172,7 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
     @Override
     public void itemSelected(int pos) {
-        connector = new ServerConnectorImpl(context, serversList.getServer(pos).getIp());
-        directoryPath = "";
+        serverConnectorAdapter = new ServerConnectorAdapter(new ServerConnectorImpl(context, serversList.getServer(pos).getIp()), new JsonConverter(new Gson()));
     }
 
     @Override
@@ -183,7 +182,7 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     }
 
     private void refreshStatus(){
-        pingServersObservable.onNext(null);
+        pingServersObservable.onNext("");
     }
 
     @Override
@@ -204,7 +203,18 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
     @Override
     public void getFilesList() {
-        filesListObservable.onNext(directoryPath);
+        filesListObservable.onNext("");
 
+    }
+
+    @Override
+    public void addFile(File file) {
+
+    }
+
+    @Override
+    public void goBack() {
+        serverConnectorAdapter.goUp();
+        filesListObservable.onNext("");
     }
 }
