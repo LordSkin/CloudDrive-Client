@@ -37,6 +37,9 @@ public class ServerConnectorImpl implements ServerConnector {
     Context context;
 
     public ServerConnectorImpl(Context context, String baseAddress) {
+        if (!baseAddress.endsWith("/")){
+            baseAddress+="/";
+        }
         this.baseAddress = baseAddress;
         client = new OkHttpClient();
         this.context = context;

@@ -76,8 +76,7 @@ public class ServerConnectorAdapter {
         return result;
     }
 
-    public List<FileDetails> goTobaseDir() throws IOException {
+    public void goTobaseDir() {
         path = "";
-        return getList();
     }
 }

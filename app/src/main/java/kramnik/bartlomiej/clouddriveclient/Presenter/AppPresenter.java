@@ -12,6 +12,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
@@ -48,6 +49,8 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     private PublishSubject<String> pingServersObservable;
 
     private PublishSubject<String> filesListObservable;
+
+    private PublishSubject<File> addFileObservable;
 
     private List<FileDetails> actualFiles;
 
@@ -151,6 +154,35 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
                     }
                 });
 
+        addFileObservable = PublishSubject.create();
+        addFileObservable.observeOn(Schedulers.newThread())
+                .subscribe(new Observer<File>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(File file) {
+                        try {
+                            serverConnectorAdapter.addFile(file, file.getName());
+                        }
+                        catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
 
     }
 
@@ -209,7 +241,7 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
     @Override
     public void addFile(File file) {
-
+        addFileObservable.onNext(file);
     }
 
     @Override
