@@ -1,8 +1,8 @@
 package kramnik.bartlomiej.clouddriveclient.View.FilesList;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
@@ -25,7 +25,7 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
     private FloatingActionButton addButton;
     private FloatingActionButton backButton;
 
-    private final int requestCode = 23485;
+    private final int requestCodeGetFile = 23485;
 
 
     @Inject
@@ -63,6 +63,9 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
             @Override
             public void run() {
                 progressBar.setVisibility(View.VISIBLE);
+                listView.setVisibility(View.GONE);
+                addButton.setVisibility(View.GONE);
+                backButton.setVisibility(View.GONE);
             }
         });
     }
@@ -73,6 +76,9 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
             @Override
             public void run() {
                 progressBar.setVisibility(View.GONE);
+                listView.setVisibility(View.VISIBLE);
+                addButton.setVisibility(View.VISIBLE);
+                backButton.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -89,17 +95,16 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
 
     @Override
     public void onClick(View view) {
-        if(view.getId()==addButton.getId()){
-            // TODO: 21.03.18
+        if (view.getId() == addButton.getId()) {
 
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("*/*");
 
-            startActivityForResult(intent, requestCode);
+            startActivityForResult(intent, requestCodeGetFile);
 
         }
-        if (view.getId()==backButton.getId()){
+        if (view.getId() == backButton.getId()) {
             presenter.goBack();
         }
     }
@@ -107,12 +112,17 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==this.requestCode){
+        if (requestCode == this.requestCodeGetFile) {
             if (resultCode == Activity.RESULT_OK) {
-                presenter.addFile(new File(data.getData().getPath()));
+                Uri uri = data.getData();
+
+                String s = uri.getPath();
+
+                presenter.addFile(uri);
+
             }
         }
-
-
     }
+
+
 }

@@ -100,6 +100,8 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void run() {
                 progressBar.setVisibility(View.VISIBLE);
+                listView.setVisibility(View.GONE);
+                addButton.setVisibility(View.GONE);
             }
         });
 
@@ -111,6 +113,8 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void run() {
                 progressBar.setVisibility(View.GONE);
+                listView.setVisibility(View.VISIBLE);
+                addButton.setVisibility(View.VISIBLE);
             }
         });
 

@@ -3,6 +3,7 @@ package kramnik.bartlomiej.clouddriveclient.Model.DataBase;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.ServerEntity;
@@ -20,12 +21,12 @@ public class ServersList {
     public ServersList(Context context) {
         dataBase = Room.databaseBuilder(context, ServerDataBase.class, "testDataBase1").build();
         servers = dataBase.serversDao().getAll();
+        if (servers==null) servers = new ArrayList<ServerEntity>();
     }
 
     public ServersList(ServerDataBase dataBase) {
         this.dataBase = dataBase;
-        this.
-        servers = dataBase.serversDao().getAll();
+        this.servers = dataBase.serversDao().getAll();
     }
 
     public List<ServerEntity> getServers(){

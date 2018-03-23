@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
 import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
@@ -41,7 +42,9 @@ public class ServerConnectorImpl implements ServerConnector {
             baseAddress+="/";
         }
         this.baseAddress = baseAddress;
-        client = new OkHttpClient();
+        client = new OkHttpClient.Builder()
+                .connectTimeout(2, TimeUnit.SECONDS)
+                .build();
         this.context = context;
     }
 

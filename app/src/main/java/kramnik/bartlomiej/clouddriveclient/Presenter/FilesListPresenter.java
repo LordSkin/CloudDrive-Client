@@ -1,5 +1,7 @@
 package kramnik.bartlomiej.clouddriveclient.Presenter;
 
+import android.net.Uri;
+
 import java.io.File;
 
 import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListView;
@@ -14,7 +16,7 @@ public interface FilesListPresenter {
 
     void getFilesList();
 
-    void addFile(File file);
+    void addFile(Uri file);
 
     void goBack();
 }

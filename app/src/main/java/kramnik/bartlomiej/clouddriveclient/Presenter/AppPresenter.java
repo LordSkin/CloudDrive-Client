@@ -1,6 +1,9 @@
 package kramnik.bartlomiej.clouddriveclient.Presenter;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.OpenableColumns;
 
 import com.google.gson.Gson;
 
@@ -23,6 +26,7 @@ import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnector;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnectorAdapter;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnectorImpl;
+import kramnik.bartlomiej.clouddriveclient.Model.UriResolver;
 import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListView;
 import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.SelectDriveView;
 
@@ -38,6 +42,9 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     @Inject
     ServersList serversList;
 
+    @Inject
+    UriResolver resolver;
+
     private ServerConnectorAdapter serverConnectorAdapter;
 
     private SelectDriveView selectDriveView;
@@ -50,7 +57,7 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
     private PublishSubject<String> filesListObservable;
 
-    private PublishSubject<File> addFileObservable;
+    private PublishSubject<Uri> addFileObservable;
 
     private List<FileDetails> actualFiles;
 
@@ -156,19 +163,31 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
         addFileObservable = PublishSubject.create();
         addFileObservable.observeOn(Schedulers.newThread())
-                .subscribe(new Observer<File>() {
+                .subscribe(new Observer<Uri>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(File file) {
+                    public void onNext(Uri file) {
                         try {
-                            serverConnectorAdapter.addFile(file, file.getName());
+
+                            filesListView.showLoading();
+                            Cursor cursor = null;
+                            String displayName = "name";
+                                cursor = context.getContentResolver().query(file, null, null, null, null);
+                                if (cursor != null && cursor.moveToFirst()) {
+                                    displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                                }
+                            serverConnectorAdapter.addFile(resolver.getFile(file), displayName);
+                                filesListView.hideLoading();
                         }
-                        catch (IOException e) {
+                        catch (Exception e) {
                             e.printStackTrace();
+                        }
+                        catch (OutOfMemoryError e){
+                            //
                         }
                     }
 
@@ -240,7 +259,7 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     }
 
     @Override
-    public void addFile(File file) {
+    public void addFile(Uri file) {
         addFileObservable.onNext(file);
     }
 
