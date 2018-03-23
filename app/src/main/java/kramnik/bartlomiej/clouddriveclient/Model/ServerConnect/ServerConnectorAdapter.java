@@ -14,11 +14,12 @@ import kramnik.bartlomiej.clouddriveclient.View.ProgressIndicator;
 
 public class ServerConnectorAdapter {
 
-    public static char fileSeparator = '%';
+    public static char fileSeparator = '&';
 
     private ServerConnector serverConnector;
 
     private String path;
+
 
     private JsonConverter converter;
 
@@ -38,6 +39,10 @@ public class ServerConnectorAdapter {
     }
 
     public List<FileDetails> getList() throws IOException {
+
+        List<FileDetails> list = serverConnector.getList(path, converter);
+
+
         return serverConnector.getList(path, converter);
     }
 
@@ -63,6 +68,7 @@ public class ServerConnectorAdapter {
     public void goUp() {
         int ind = path.lastIndexOf(fileSeparator);
         if (ind >= 0) path = path.substring(0, ind);
+        int x =0;
     }
 
     public boolean isBaseFolder() {

@@ -21,6 +21,7 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import kramnik.bartlomiej.clouddriveclient.Model.DataBase.ServersList;
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
+import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileType;
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.ServerEntity;
 import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnector;
@@ -56,6 +57,8 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     private PublishSubject<String> pingServersObservable;
 
     private PublishSubject<String> filesListObservable;
+
+    private PublishSubject<Integer> fileSelectedObservable;
 
     private PublishSubject<Uri> addFileObservable;
 
@@ -202,7 +205,46 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
                     }
                 });
 
+        fileSelectedObservable = PublishSubject.create();
+        fileSelectedObservable.observeOn(Schedulers.newThread())
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        try{
+                            filesListView.showLoading();
+                            if(actualFiles.get(integer).getFileType()== FileType.Folder){
+                                serverConnectorAdapter.goTo(actualFiles.get(integer).getName());
+                                actualFiles = serverConnectorAdapter.getList();
+                                filesListView.refreshView();
+                            }
+                            else {
+                                // TODO: 23.03.2018  
+                            }
+                        }
+                        catch (Exception e){
+                            
+                        }
+                        finally {
+                            filesListView.hideLoading();
+                        }
+                        
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -250,6 +292,11 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     public void setFilesListView(FilesListView view) {
         this.filesListView = view;
 
+    }
+
+    @Override
+    public void itemClicked(int pos) {
+        fileSelectedObservable.onNext(pos);
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -17,7 +18,7 @@ import kramnik.bartlomiej.clouddriveclient.Presenter.FilesListPresenter;
 import kramnik.bartlomiej.clouddriveclient.R;
 import kramnik.bartlomiej.clouddriveclient.Root.App;
 
-public class FilesListActivity extends Activity implements FilesListView, View.OnClickListener {
+public class FilesListActivity extends Activity implements FilesListView, View.OnClickListener, AdapterView.OnItemClickListener {
 
     private ProgressBar progressBar;
     private ListView listView;
@@ -41,6 +42,7 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
         addButton = (FloatingActionButton) findViewById(R.id.addButton);
         backButton = (FloatingActionButton) findViewById(R.id.backButton);
 
+        listView.setOnItemClickListener(this);
         addButton.setOnClickListener(this);
         backButton.setOnClickListener(this);
 
@@ -125,4 +127,8 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
     }
 
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        presenter.itemClicked(i);
+    }
 }

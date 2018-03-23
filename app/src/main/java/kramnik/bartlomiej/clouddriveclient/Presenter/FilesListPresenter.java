@@ -14,6 +14,8 @@ public interface FilesListPresenter {
 
     void setFilesListView(FilesListView view);
 
+    void itemClicked(int pos);
+
     void getFilesList();
 
     void addFile(Uri file);
