@@ -4,4 +4,5 @@
     <string name="serverAddress">adres IP</string>
     <string name="serverPort">port</string>
     <string name="addServerDialog">Dodaj nowy dysk</string>
+    <string name="downloadComplete">Pobieranie ukończone - plik zapisano w standardowym katalogu</string>
 </resources>

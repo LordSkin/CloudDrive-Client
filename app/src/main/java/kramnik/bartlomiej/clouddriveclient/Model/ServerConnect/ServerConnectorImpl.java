@@ -2,8 +2,13 @@ package kramnik.bartlomiej.clouddriveclient.Model.ServerConnect;
 
 import android.accounts.NetworkErrorException;
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
+import android.webkit.URLUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -66,7 +71,7 @@ public class ServerConnectorImpl implements ServerConnector {
             byte[] buff = new byte[1024 * 4];
             long downloaded = 0;
             long target = response.body().contentLength();
-            File file = new File(context.getCacheDir(), name);
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), name);
             OutputStream output = new FileOutputStream(file);
 
             indicator.setProgress(0, target);
@@ -108,7 +113,7 @@ public class ServerConnectorImpl implements ServerConnector {
             byte[] buff = new byte[1024 * 4];
             long downloaded = 0;
             long target = response.body().contentLength();
-            File file = new File(context.getCacheDir(), name);
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), name);
             OutputStream output = new FileOutputStream(file);
 
             while (true) {
@@ -135,6 +140,7 @@ public class ServerConnectorImpl implements ServerConnector {
             throw new IOException("wrong response code");
         }
     }
+
 
     @Override
     public List<FileDetails> getList(String url, JsonConverter converter) throws IOException {

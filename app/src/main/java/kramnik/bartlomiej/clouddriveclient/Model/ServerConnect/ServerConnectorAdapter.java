@@ -1,5 +1,12 @@
 package kramnik.bartlomiej.clouddriveclient.Model.ServerConnect;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
+import android.webkit.MimeTypeMap;
+import android.webkit.URLUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -34,9 +41,10 @@ public class ServerConnectorAdapter {
     }
 
     public File getFile(String name) throws IOException {
-        if (name == null) throw new NullPointerException();
         return serverConnector.getFile(path + name, name);
     }
+
+
 
     public List<FileDetails> getList() throws IOException {
 

@@ -3,12 +3,14 @@ package kramnik.bartlomiej.clouddriveclient.View.FilesList;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -17,10 +19,11 @@ import javax.inject.Inject;
 import kramnik.bartlomiej.clouddriveclient.Presenter.FilesListPresenter;
 import kramnik.bartlomiej.clouddriveclient.R;
 import kramnik.bartlomiej.clouddriveclient.Root.App;
+import kramnik.bartlomiej.clouddriveclient.View.ProgressIndicator;
 
-public class FilesListActivity extends Activity implements FilesListView, View.OnClickListener, AdapterView.OnItemClickListener {
+public class FilesListActivity extends Activity implements FilesListView, View.OnClickListener, AdapterView.OnItemClickListener, ProgressIndicator {
 
-    private ProgressBar progressBar;
+    private ProgressBar progressBar, downloadingProgress;
     private ListView listView;
     private FilesListAdapter adapter;
     private FloatingActionButton addButton;
@@ -38,6 +41,7 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
         setContentView(R.layout.activity_files_list);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar2);
+        downloadingProgress = (ProgressBar) findViewById(R.id.downloadPropgressbar);
         listView = (ListView) findViewById(R.id.listView);
         addButton = (FloatingActionButton) findViewById(R.id.addButton);
         backButton = (FloatingActionButton) findViewById(R.id.backButton);
@@ -96,6 +100,11 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
     }
 
     @Override
+    public ProgressIndicator getProgressIndocator() {
+        return this;
+    }
+
+    @Override
     public void onClick(View view) {
         if (view.getId() == addButton.getId()) {
 
@@ -130,5 +139,34 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         presenter.itemClicked(i);
+    }
+
+    @Override
+    public void setProgress(final double current, final double max) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                downloadingProgress.setVisibility(View.VISIBLE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    downloadingProgress.setProgress((int)((current/max)*100), true);
+                }
+                else {
+                    downloadingProgress.setProgress((int)((current/max)*100));
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void completed(final File file) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                downloadingProgress.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloadComplete), Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 }

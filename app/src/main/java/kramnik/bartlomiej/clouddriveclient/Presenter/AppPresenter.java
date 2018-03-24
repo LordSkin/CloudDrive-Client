@@ -1,9 +1,15 @@
 package kramnik.bartlomiej.clouddriveclient.Presenter;
 
+import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.OpenableColumns;
+import android.webkit.MimeTypeMap;
+import android.webkit.URLUtil;
 
 import com.google.gson.Gson;
 
@@ -29,6 +35,7 @@ import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnectorAd
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnectorImpl;
 import kramnik.bartlomiej.clouddriveclient.Model.UriResolver;
 import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListView;
+import kramnik.bartlomiej.clouddriveclient.View.ProgressIndicator;
 import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.SelectDriveView;
 
 /**
@@ -223,11 +230,15 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
                                 filesListView.refreshView();
                             }
                             else {
-                                // TODO: 23.03.2018  
+                                serverConnectorAdapter.getFile(actualFiles.get(integer).getName(), filesListView.getProgressIndocator());
                             }
                         }
                         catch (Exception e){
-                            
+                            e.printStackTrace();
+                        }
+                        catch (Error e)
+                        {
+                            e.printStackTrace();
                         }
                         finally {
                             filesListView.hideLoading();
