@@ -1,6 +1,7 @@
 package kramnik.bartlomiej.clouddriveclient.Root;
 
 import android.app.Application;
+import android.os.StrictMode;
 
 
 import io.reactivex.Observable;
@@ -32,6 +33,9 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
 
         presenter = new AppPresenter();
         final App app = this;

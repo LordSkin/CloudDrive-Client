@@ -1,12 +1,14 @@
 package kramnik.bartlomiej.clouddriveclient.View.FilesList;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -148,14 +150,18 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
             public void run() {
                 downloadingProgress.setVisibility(View.VISIBLE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    downloadingProgress.setProgress((int)((current/max)*100), true);
-                }
-                else {
-                    downloadingProgress.setProgress((int)((current/max)*100));
+                    downloadingProgress.setProgress((int) ((current / max) * 100), true);
+                } else {
+                    downloadingProgress.setProgress((int) ((current / max) * 100));
                 }
             }
         });
 
+    }
+
+    private String getExtension(String name) {
+        int ind = name.lastIndexOf(".");
+        return name.substring(ind + 1);
     }
 
     @Override
@@ -164,7 +170,21 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
             @Override
             public void run() {
                 downloadingProgress.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloadComplete), Toast.LENGTH_LONG).show();
+
+                MimeTypeMap myMime = MimeTypeMap.getSingleton();
+                Intent newIntent = new Intent(Intent.ACTION_VIEW);
+                String mimeType = myMime.getMimeTypeFromExtension(getExtension(file.getName()));
+                newIntent.setDataAndType(Uri.fromFile(file), mimeType);
+                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                try {
+                    if (mimeType==null) throw new NullPointerException();
+                    startActivity(newIntent);
+                }
+                catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloadComplete), Toast.LENGTH_LONG).show();
+                }
+
+
             }
         });
 
