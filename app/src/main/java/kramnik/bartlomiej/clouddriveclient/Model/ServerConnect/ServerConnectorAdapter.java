@@ -37,8 +37,9 @@ public class ServerConnectorAdapter {
     }
 
     public void getFile(String name, ProgressIndicator indicator) throws IOException {
-        serverConnector.getFile(path + name, name, indicator);
+        serverConnector.getFile(path +fileSeparator + name, name, indicator);
     }
+
 
     public File getFile(String name) throws IOException {
         return serverConnector.getFile(path + name, name);

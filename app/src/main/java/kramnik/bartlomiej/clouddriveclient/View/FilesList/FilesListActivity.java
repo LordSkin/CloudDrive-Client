@@ -21,9 +21,10 @@ import javax.inject.Inject;
 import kramnik.bartlomiej.clouddriveclient.Presenter.FilesListPresenter;
 import kramnik.bartlomiej.clouddriveclient.R;
 import kramnik.bartlomiej.clouddriveclient.Root.App;
+import kramnik.bartlomiej.clouddriveclient.View.Dialogs.FileOptionsDialog;
 import kramnik.bartlomiej.clouddriveclient.View.ProgressIndicator;
 
-public class FilesListActivity extends Activity implements FilesListView, View.OnClickListener, AdapterView.OnItemClickListener, ProgressIndicator {
+public class FilesListActivity extends Activity implements FilesListView, View.OnClickListener, AdapterView.OnItemClickListener, ProgressIndicator, AdapterView.OnItemLongClickListener {
 
     private ProgressBar progressBar, downloadingProgress;
     private ListView listView;
@@ -49,6 +50,7 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
         backButton = (FloatingActionButton) findViewById(R.id.backButton);
 
         listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
         addButton.setOnClickListener(this);
         backButton.setOnClickListener(this);
 
@@ -188,5 +190,16 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
             }
         });
 
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Bundle args = new Bundle();
+            args.putInt("pos", i);
+
+        FileOptionsDialog dialog = new FileOptionsDialog();
+        dialog.setPosition(i);
+        dialog.show(getFragmentManager(), getResources().getString(R.string.fileDetails));
+        return true;
     }
 }

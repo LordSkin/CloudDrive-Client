@@ -5,4 +5,9 @@
     <string name="serverPort">port</string>
     <string name="addServerDialog">Dodaj nowy dysk</string>
     <string name="downloadComplete">Pobieranie ukończone - plik zapisano w standardowym katalogu</string>
+    <string name="delete">Usuń</string>
+    <string name="rename">Zmień nazwę...</string>
+    <string name="OK">OK</string>
+    <string name="back">wstecz</string>
+    <string name="fileDetails">Szczegóły pliku</string>
 </resources>

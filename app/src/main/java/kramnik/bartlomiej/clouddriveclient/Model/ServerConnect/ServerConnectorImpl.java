@@ -165,8 +165,12 @@ public class ServerConnectorImpl implements ServerConnector {
 
     @Override
     public boolean rename(String url, String newName) throws IOException {
-        // TODO: 11.03.2018  
-        return false;
+        Request request = new Request.Builder()
+                .url(baseAddress+"rename/"+url+"/"+newName)
+                .get()
+                .build();
+        Response response = client.newCall(request).execute();
+        return response.code()==200||response.code()==201;
     }
 
     @Override
@@ -185,7 +189,7 @@ public class ServerConnectorImpl implements ServerConnector {
     public boolean addFolder(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(baseAddress+"/folder/"+url)
-                .post(null)
+                .get()
                 .build();
         Response response = client.newCall(request).execute();
         return response.code()==200||response.code()==201;

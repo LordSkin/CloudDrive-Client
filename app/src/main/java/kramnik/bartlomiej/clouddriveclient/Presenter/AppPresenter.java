@@ -34,6 +34,7 @@ import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnector;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnectorAdapter;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnectorImpl;
 import kramnik.bartlomiej.clouddriveclient.Model.UriResolver;
+import kramnik.bartlomiej.clouddriveclient.View.Dialogs.FileOptionsDialog;
 import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListView;
 import kramnik.bartlomiej.clouddriveclient.View.ProgressIndicator;
 import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.SelectDriveView;
@@ -42,7 +43,7 @@ import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.SelectDriveView;
  * App presenter implementation
  */
 
-public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePresenter, AddServerPresenter, FilesListPresenter, FilesListAdapterDataSource {
+public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePresenter, AddServerPresenter, FilesListPresenter, FilesListAdapterDataSource, FileDetailsPresenter {
 
     @Inject
     Context context;
@@ -68,6 +69,10 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     private PublishSubject<Integer> fileSelectedObservable;
 
     private PublishSubject<Uri> addFileObservable;
+
+    private PublishSubject<String> deleteFileObservable;
+
+    private PublishSubject<String[]> renameObservable;
 
     private List<FileDetails> actualFiles;
 
@@ -256,6 +261,78 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
                     }
                 });
+
+        deleteFileObservable = PublishSubject.create();
+        deleteFileObservable.observeOn(Schedulers.newThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+
+                        try {
+                            filesListView.showLoading();
+                            serverConnectorAdapter.delete(s);
+                            actualFiles = serverConnectorAdapter.getList();
+                        }
+                        catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        finally {
+                            filesListView.refreshView();
+                            filesListView.hideLoading();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+        renameObservable = PublishSubject.create();
+        renameObservable.observeOn(Schedulers.newThread())
+                .subscribe(new Observer<String[]>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String[] strings) {
+                        try {
+                            filesListView.showLoading();
+                            serverConnectorAdapter.rename(strings[0], strings[1]);
+                            actualFiles = serverConnectorAdapter.getList();
+                        }
+                        catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        finally {
+                            filesListView.refreshView();
+                            filesListView.hideLoading();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -325,5 +402,21 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     public void goBack() {
         serverConnectorAdapter.goUp();
         filesListObservable.onNext("");
+    }
+
+    @Override
+    public void deleteFile(int pos) {
+        deleteFileObservable.onNext(actualFiles.get(pos).getName());
+    }
+
+    @Override
+    public void renameFile(int pos, String newName) {
+        String[] strings = {actualFiles.get(pos).getName(), newName};
+        renameObservable.onNext(strings);
+    }
+
+    @Override
+    public FileDetails getFileDetails(int pos) {
+        return actualFiles.get(pos);
     }
 }
