@@ -94,4 +94,8 @@ public class ServerConnectorAdapter {
     public void goTobaseDir() {
         path = "";
     }
+
+    public String getFileAddress(String name){
+        return serverConnector.getBaseAddress()+"/get/"+path +fileSeparator + name;
+    }
 }

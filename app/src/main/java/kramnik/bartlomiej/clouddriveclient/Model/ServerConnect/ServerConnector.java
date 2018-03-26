@@ -32,4 +32,6 @@ public interface ServerConnector {
     boolean addFolder(String url) throws IOException;
 
     boolean ping();
+
+    String getBaseAddress();
 }

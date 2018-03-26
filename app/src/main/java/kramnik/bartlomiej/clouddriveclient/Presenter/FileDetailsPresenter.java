@@ -14,4 +14,6 @@ public interface FileDetailsPresenter {
 
     FileDetails getFileDetails(int pos);
 
+    String getFileAddress(int pos);
+
 }

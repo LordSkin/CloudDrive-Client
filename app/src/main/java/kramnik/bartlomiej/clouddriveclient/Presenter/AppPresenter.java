@@ -419,4 +419,9 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     public FileDetails getFileDetails(int pos) {
         return actualFiles.get(pos);
     }
+
+    @Override
+    public String getFileAddress(int pos) {
+        return serverConnectorAdapter.getFileAddress(actualFiles.get(pos).getName());
+    }
 }

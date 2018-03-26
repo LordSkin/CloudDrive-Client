@@ -5,11 +5,13 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,7 +27,7 @@ import kramnik.bartlomiej.clouddriveclient.Root.App;
  * Dialog providing options of file
  */
 
-public class FileOptionsDialog extends DialogFragment {
+public class FileOptionsDialog extends DialogFragment implements View.OnClickListener {
 
     String fileName;
     FileType type;
@@ -82,6 +84,9 @@ public class FileOptionsDialog extends DialogFragment {
         TextView name = (TextView)result.findViewById(R.id.fileName);
         name.setText(fileName);
 
+        ImageButton shareButton = (ImageButton)result.findViewById(R.id.shareButton);
+        shareButton.setOnClickListener(this);
+
         editText = (EditText) result.findViewById(R.id.editText);
 
 
@@ -102,5 +107,14 @@ public class FileOptionsDialog extends DialogFragment {
 
         return builder.create();
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = presenter.getFileAddress(position);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingIntent, this.getResources().getString(R.string.shareVia)));
     }
 }

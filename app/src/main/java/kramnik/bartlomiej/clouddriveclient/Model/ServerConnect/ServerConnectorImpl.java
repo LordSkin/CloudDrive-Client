@@ -59,6 +59,11 @@ public class ServerConnectorImpl implements ServerConnector {
     }
 
     @Override
+    public String getBaseAddress() {
+        return baseAddress;
+    }
+
+    @Override
     public void getFile(String url, String name, ProgressIndicator indicator) throws IOException {
 
         Call call = client.newCall(new Request.Builder().url(baseAddress+"/get/"+url).get().build());
