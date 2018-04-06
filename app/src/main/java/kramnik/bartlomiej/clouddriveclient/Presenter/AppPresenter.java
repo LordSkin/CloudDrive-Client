@@ -54,6 +54,9 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     @Inject
     UriResolver resolver;
 
+    @Inject
+    DownloadManager downloadManager;
+
     private ServerConnectorAdapter serverConnectorAdapter;
 
     private SelectDriveView selectDriveView;
@@ -384,7 +387,28 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
     @Override
     public void itemClicked(int pos) {
-        fileSelectedObservable.onNext(pos);
+        //fileSelectedObservable.onNext(pos);
+
+        try{
+            //filesListView.showLoading();
+            if(actualFiles.get(pos).getFileType()== FileType.Folder){
+                serverConnectorAdapter.goTo(actualFiles.get(pos).getName());
+                actualFiles = serverConnectorAdapter.getList();
+                filesListView.refreshView();
+            }
+            else {
+                //serverConnectorAdapter.getFile(actualFiles.get(pos).getName(), filesListView.getProgressIndocator());
+                downloadFile(serverConnectorAdapter.getFileAddress(actualFiles.get(pos).getName()), actualFiles.get(pos).getName());
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        catch (Error e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -423,5 +447,21 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     @Override
     public String getFileAddress(int pos) {
         return serverConnectorAdapter.getFileAddress(actualFiles.get(pos).getName());
+    }
+
+    private void downloadFile(String url, String name) {
+        Uri Download_Uri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
+
+        request.setTitle("title");
+        request.setDescription("desc");
+        //Set the local destination for the downloaded file to a path within the application's external files directory
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name);
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        request.setAllowedOverRoaming(true);
+        request.setVisibleInDownloadsUi(true);
+
+        //Enqueue a new download and same the referenceId
+        downloadManager.enqueue(request);
     }
 }

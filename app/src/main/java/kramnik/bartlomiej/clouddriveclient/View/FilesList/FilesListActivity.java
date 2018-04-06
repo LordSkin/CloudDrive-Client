@@ -1,11 +1,14 @@
 package kramnik.bartlomiej.clouddriveclient.View.FilesList;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -32,6 +35,7 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
     private FloatingActionButton addButton;
     private FloatingActionButton backButton;
 
+
     private final int requestCodeGetFile = 23485;
 
 
@@ -42,6 +46,7 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_files_list);
+
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar2);
         downloadingProgress = (ProgressBar) findViewById(R.id.downloadPropgressbar);
@@ -202,4 +207,6 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
         dialog.show(getFragmentManager(), getResources().getString(R.string.fileDetails));
         return true;
     }
+
+
 }

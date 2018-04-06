@@ -1,5 +1,6 @@
 package kramnik.bartlomiej.clouddriveclient.Presenter.Dagger;
 
+import android.app.DownloadManager;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
@@ -25,11 +26,14 @@ public class PresenterModule {
 
     private UriResolver resolver;
 
+    private DownloadManager downloadManager;
+
 
     public PresenterModule(Context context) {
         this.context = context;
         resolver = new UriResolver(context);
         serversList = new ServersList(context);
+        downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
     }
 
     @Provides
@@ -45,5 +49,10 @@ public class PresenterModule {
     @Provides
     public UriResolver getResolver() {
         return resolver;
+    }
+
+    @Provides
+    public DownloadManager getDownloadManager() {
+        return downloadManager;
     }
 }
