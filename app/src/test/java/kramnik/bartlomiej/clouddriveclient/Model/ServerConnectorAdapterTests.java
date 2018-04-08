@@ -12,7 +12,6 @@ import java.util.List;
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnector;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnectorAdapter;
-import kramnik.bartlomiej.clouddriveclient.View.ProgressIndicator;
 
 /**
  * Tests of ServerConnectorAdapter

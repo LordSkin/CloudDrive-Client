@@ -4,6 +4,8 @@ import android.app.DownloadManager;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
+import com.esafirm.rxdownloader.RxDownloader;
+
 import dagger.Module;
 import dagger.Provides;
 import kramnik.bartlomiej.clouddriveclient.Model.DataBase.ServerDataBase;
@@ -28,12 +30,15 @@ public class PresenterModule {
 
     private DownloadManager downloadManager;
 
+    private RxDownloader downloader;
+
 
     public PresenterModule(Context context) {
         this.context = context;
         resolver = new UriResolver(context);
         serversList = new ServersList(context);
         downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        downloader = new RxDownloader(context);
     }
 
     @Provides
@@ -54,5 +59,10 @@ public class PresenterModule {
     @Provides
     public DownloadManager getDownloadManager() {
         return downloadManager;
+    }
+
+    @Provides
+    public RxDownloader getDownloader() {
+        return downloader;
     }
 }

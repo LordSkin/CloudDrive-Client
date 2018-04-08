@@ -1,16 +1,12 @@
 package kramnik.bartlomiej.clouddriveclient.Presenter;
 
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.OpenableColumns;
-import android.webkit.MimeTypeMap;
-import android.webkit.URLUtil;
 
+import com.esafirm.rxdownloader.RxDownloader;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -21,7 +17,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
@@ -34,9 +29,7 @@ import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnector;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnectorAdapter;
 import kramnik.bartlomiej.clouddriveclient.Model.ServerConnect.ServerConnectorImpl;
 import kramnik.bartlomiej.clouddriveclient.Model.UriResolver;
-import kramnik.bartlomiej.clouddriveclient.View.Dialogs.FileOptionsDialog;
 import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListView;
-import kramnik.bartlomiej.clouddriveclient.View.ProgressIndicator;
 import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.SelectDriveView;
 
 /**
@@ -57,6 +50,9 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     @Inject
     DownloadManager downloadManager;
 
+    @Inject
+    RxDownloader downloader;
+
     private ServerConnectorAdapter serverConnectorAdapter;
 
     private SelectDriveView selectDriveView;
@@ -69,7 +65,7 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
     private PublishSubject<String> filesListObservable;
 
-    private PublishSubject<Integer> fileSelectedObservable;
+    private PublishSubject<Integer> selectFolderObservable;
 
     private PublishSubject<Uri> addFileObservable;
 
@@ -220,8 +216,8 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
                     }
                 });
 
-        fileSelectedObservable = PublishSubject.create();
-        fileSelectedObservable.observeOn(Schedulers.newThread())
+        selectFolderObservable = PublishSubject.create();
+        selectFolderObservable.observeOn(Schedulers.newThread())
                 .subscribe(new Observer<Integer>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -232,14 +228,9 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
                     public void onNext(Integer integer) {
                         try{
                             filesListView.showLoading();
-                            if(actualFiles.get(integer).getFileType()== FileType.Folder){
                                 serverConnectorAdapter.goTo(actualFiles.get(integer).getName());
                                 actualFiles = serverConnectorAdapter.getList();
                                 filesListView.refreshView();
-                            }
-                            else {
-                                serverConnectorAdapter.getFile(actualFiles.get(integer).getName(), filesListView.getProgressIndocator());
-                            }
                         }
                         catch (Exception e){
                             e.printStackTrace();
@@ -387,18 +378,38 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
     @Override
     public void itemClicked(int pos) {
-        //fileSelectedObservable.onNext(pos);
 
         try{
-            //filesListView.showLoading();
             if(actualFiles.get(pos).getFileType()== FileType.Folder){
                 serverConnectorAdapter.goTo(actualFiles.get(pos).getName());
                 actualFiles = serverConnectorAdapter.getList();
                 filesListView.refreshView();
             }
             else {
-                //serverConnectorAdapter.getFile(actualFiles.get(pos).getName(), filesListView.getProgressIndocator());
-                downloadFile(serverConnectorAdapter.getFileAddress(actualFiles.get(pos).getName()), actualFiles.get(pos).getName());
+                String url = serverConnectorAdapter.getFileAddress(actualFiles.get(pos).getName()).replace("\\\\","//");
+               downloader.download(url, actualFiles.get(pos).getName(), false)
+                       .subscribe(new Observer<String>() {
+                           @Override
+                           public void onSubscribe(Disposable d) {
+
+                           }
+
+                           @Override
+                           public void onNext(String s) {
+                                 File result = new File(s.replace("file://",""));
+                                 filesListView.operFile(result);
+                           }
+
+                           @Override
+                           public void onError(Throwable e) {
+                                e.printStackTrace();
+                           }
+
+                           @Override
+                           public void onComplete() {
+
+                           }
+                       });
             }
         }
         catch (Exception e){
@@ -449,19 +460,5 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
         return serverConnectorAdapter.getFileAddress(actualFiles.get(pos).getName());
     }
 
-    private void downloadFile(String url, String name) {
-        Uri Download_Uri = Uri.parse(url);
-        DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
 
-        request.setTitle("title");
-        request.setDescription("desc");
-        //Set the local destination for the downloaded file to a path within the application's external files directory
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name);
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-        request.setAllowedOverRoaming(true);
-        request.setVisibleInDownloadsUi(true);
-
-        //Enqueue a new download and same the referenceId
-        downloadManager.enqueue(request);
-    }
 }

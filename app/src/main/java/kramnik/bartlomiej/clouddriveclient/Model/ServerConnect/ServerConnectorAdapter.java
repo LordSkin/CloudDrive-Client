@@ -1,19 +1,11 @@
 package kramnik.bartlomiej.clouddriveclient.Model.ServerConnect;
 
-import android.app.DownloadManager;
-import android.content.Context;
-import android.net.Uri;
-import android.os.Environment;
-import android.webkit.MimeTypeMap;
-import android.webkit.URLUtil;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
 import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
-import kramnik.bartlomiej.clouddriveclient.View.ProgressIndicator;
 
 /**
  * adapter for server connector, to make it easier navigating in files
@@ -34,15 +26,6 @@ public class ServerConnectorAdapter {
         this.serverConnector = serverConnector;
         this.path = "";
         this.converter = converter;
-    }
-
-    public void getFile(String name, ProgressIndicator indicator) throws IOException {
-        serverConnector.getFile(path +fileSeparator + name, name, indicator);
-    }
-
-
-    public File getFile(String name) throws IOException {
-        return serverConnector.getFile(path + name, name);
     }
 
 

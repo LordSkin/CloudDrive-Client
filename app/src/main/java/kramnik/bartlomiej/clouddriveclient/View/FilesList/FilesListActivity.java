@@ -1,14 +1,10 @@
 package kramnik.bartlomiej.clouddriveclient.View.FilesList;
 
 import android.app.Activity;
-import android.app.DownloadManager;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -25,11 +21,10 @@ import kramnik.bartlomiej.clouddriveclient.Presenter.FilesListPresenter;
 import kramnik.bartlomiej.clouddriveclient.R;
 import kramnik.bartlomiej.clouddriveclient.Root.App;
 import kramnik.bartlomiej.clouddriveclient.View.Dialogs.FileOptionsDialog;
-import kramnik.bartlomiej.clouddriveclient.View.ProgressIndicator;
 
-public class FilesListActivity extends Activity implements FilesListView, View.OnClickListener, AdapterView.OnItemClickListener, ProgressIndicator, AdapterView.OnItemLongClickListener {
+public class FilesListActivity extends Activity implements FilesListView, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
-    private ProgressBar progressBar, downloadingProgress;
+    private ProgressBar progressBar;
     private ListView listView;
     private FilesListAdapter adapter;
     private FloatingActionButton addButton;
@@ -49,7 +44,6 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
 
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar2);
-        downloadingProgress = (ProgressBar) findViewById(R.id.downloadPropgressbar);
         listView = (ListView) findViewById(R.id.listView);
         addButton = (FloatingActionButton) findViewById(R.id.addButton);
         backButton = (FloatingActionButton) findViewById(R.id.backButton);
@@ -86,6 +80,22 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
     }
 
     @Override
+    public void operFile(File file) {
+        MimeTypeMap myMime = MimeTypeMap.getSingleton();
+        Intent newIntent = new Intent(Intent.ACTION_VIEW);
+        String mimeType = myMime.getMimeTypeFromExtension(getExtension(file.getName()));
+        newIntent.setDataAndType(Uri.fromFile(file), mimeType);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            if (mimeType==null) throw new NullPointerException();
+            startActivity(newIntent);
+        }
+        catch (Exception e) {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloadComplete), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
     public void hideLoading() {
         runOnUiThread(new Runnable() {
             @Override
@@ -108,10 +118,6 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
         });
     }
 
-    @Override
-    public ProgressIndicator getProgressIndocator() {
-        return this;
-    }
 
     @Override
     public void onClick(View view) {
@@ -150,52 +156,14 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
         presenter.itemClicked(i);
     }
 
-    @Override
-    public void setProgress(final double current, final double max) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                downloadingProgress.setVisibility(View.VISIBLE);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    downloadingProgress.setProgress((int) ((current / max) * 100), true);
-                } else {
-                    downloadingProgress.setProgress((int) ((current / max) * 100));
-                }
-            }
-        });
-
-    }
 
     private String getExtension(String name) {
         int ind = name.lastIndexOf(".");
         return name.substring(ind + 1);
     }
 
-    @Override
-    public void completed(final File file) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                downloadingProgress.setVisibility(View.GONE);
-
-                MimeTypeMap myMime = MimeTypeMap.getSingleton();
-                Intent newIntent = new Intent(Intent.ACTION_VIEW);
-                String mimeType = myMime.getMimeTypeFromExtension(getExtension(file.getName()));
-                newIntent.setDataAndType(Uri.fromFile(file), mimeType);
-                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                try {
-                    if (mimeType==null) throw new NullPointerException();
-                    startActivity(newIntent);
-                }
-                catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloadComplete), Toast.LENGTH_LONG).show();
-                }
 
 
-            }
-        });
-
-    }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
