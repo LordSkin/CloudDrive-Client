@@ -7,6 +7,7 @@ import dagger.Provides;
 import kramnik.bartlomiej.clouddriveclient.Presenter.AddServerPresenter;
 import kramnik.bartlomiej.clouddriveclient.Presenter.AppPresenter;
 import kramnik.bartlomiej.clouddriveclient.Presenter.DrivesListAdapterDataSource;
+import kramnik.bartlomiej.clouddriveclient.Presenter.EnterPasswordPresenter;
 import kramnik.bartlomiej.clouddriveclient.Presenter.FileDetailsPresenter;
 import kramnik.bartlomiej.clouddriveclient.Presenter.FilesListAdapterDataSource;
 import kramnik.bartlomiej.clouddriveclient.Presenter.FilesListPresenter;
@@ -60,6 +61,11 @@ public class AppModule {
 
     @Provides
     public FileDetailsPresenter provideFileDetailsPresenter(){
+        return presenter;
+    }
+
+    @Provides
+    public EnterPasswordPresenter provideEnterPasswordPresenter(){
         return presenter;
     }
 }

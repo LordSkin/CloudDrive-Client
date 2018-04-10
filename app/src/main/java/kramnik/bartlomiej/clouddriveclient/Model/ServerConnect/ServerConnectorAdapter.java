@@ -28,7 +28,9 @@ public class ServerConnectorAdapter {
         this.converter = converter;
     }
 
-
+    public boolean setPassword(String userName, String password){
+        return serverConnector.setPassword(userName, password);
+    }
 
     public List<FileDetails> getList() throws IOException {
 

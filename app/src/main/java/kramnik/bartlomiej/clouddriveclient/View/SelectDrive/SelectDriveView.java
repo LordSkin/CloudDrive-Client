@@ -12,6 +12,10 @@ public interface SelectDriveView {
 
     void hideLoading();
 
+    void showPasswordDialog();
 
+    void gotoFileView();
+
+    void showWrongPassword();
 
 }

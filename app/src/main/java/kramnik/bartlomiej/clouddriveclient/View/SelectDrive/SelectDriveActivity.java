@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -16,6 +17,7 @@ import kramnik.bartlomiej.clouddriveclient.R;
 import kramnik.bartlomiej.clouddriveclient.Root.App;
 import kramnik.bartlomiej.clouddriveclient.Root.Dagger.AppComponent;
 import kramnik.bartlomiej.clouddriveclient.View.Dialogs.AddServerDialog;
+import kramnik.bartlomiej.clouddriveclient.View.Dialogs.EntryPasswordDialog;
 import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListActivity;
 
 public class SelectDriveActivity extends AppCompatActivity implements View.OnClickListener, SelectDriveView, AdapterView.OnItemClickListener {
@@ -98,9 +100,35 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        presenter.itemSelected(i);
+    public void showPasswordDialog() {
+        EntryPasswordDialog dialog = new EntryPasswordDialog();
+        dialog.show(getFragmentManager(), getResources().getString(R.string.enterPass));
+    }
+
+    @Override
+    public void gotoFileView() {
         Intent intent = new Intent(this, FilesListActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void showWrongPassword() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.wrongPassword), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        presenter.itemSelected(i);
+        showLoading();
+        EntryPasswordDialog dialog = new EntryPasswordDialog();
+        dialog.show(getFragmentManager(), getResources().getString(R.string.enterPass));
+
+
     }
 }

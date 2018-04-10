@@ -11,4 +11,8 @@
     <string name="back">wstecz</string>
     <string name="fileDetails">Szczegóły pliku</string>
     <string name="shareVia"> udostępnij plik za pomocą:</string>
+    <string name="enterPass">podaj dane dostępu dysku</string>
+    <string name="userName">nazwa użytkownika</string>
+    <string name="password">hasło</string>
+    <string name="wrongPassword">Podane dane są błędne!</string>
 </resources>

@@ -17,6 +17,8 @@ public interface ServerConnector {
 
     List<FileDetails> getList(String url, JsonConverter converter) throws IOException;
 
+    boolean setPassword(String userName, String password);
+
     boolean delete(String url) throws IOException;
 
     boolean rename(String url, String newName) throws IOException;

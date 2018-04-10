@@ -1,22 +1,30 @@
 package kramnik.bartlomiej.clouddriveclient.Model.ServerConnect;
 
 import android.content.Context;
+import android.net.wifi.hotspot2.pps.Credential;
+import android.support.annotation.Nullable;
 
 import com.esafirm.rxdownloader.RxDownloader;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.Proxy;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
 import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
+import okhttp3.Authenticator;
+import okhttp3.Challenge;
+import okhttp3.Credentials;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.Route;
 
 /**
  * Implementation of ServerConnector, alll methods are synchronous
@@ -64,6 +72,40 @@ public class ServerConnectorImpl implements ServerConnector {
         Response response = client.newCall(request).execute();
         String s = response.body().string();
         return converter.getFilesList(s);
+    }
+
+    @Override
+    public boolean setPassword(final String userName, final String password) {
+        OkHttpClient newClient = new OkHttpClient
+                .Builder()
+                .connectTimeout(2, TimeUnit.SECONDS)
+                .authenticator(new Authenticator() {
+            @Nullable
+            @Override
+            public Request authenticate(Route route, Response response) throws IOException {
+                String credential = Credentials.basic(userName, password);
+                return response.request().newBuilder().header("Authorization", credential).build();
+            }
+        }).build();
+
+        try {
+            Request request = new Request.Builder()
+                    .url(baseAddress+"/list/")
+                    .build();
+            Response response = newClient.newCall(request).execute();
+
+            if(response.code()!=401){
+                client = newClient;
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

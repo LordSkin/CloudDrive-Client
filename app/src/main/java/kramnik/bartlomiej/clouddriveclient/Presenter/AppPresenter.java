@@ -36,7 +36,7 @@ import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.SelectDriveView;
  * App presenter implementation
  */
 
-public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePresenter, AddServerPresenter, FilesListPresenter, FilesListAdapterDataSource, FileDetailsPresenter {
+public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePresenter, AddServerPresenter, FilesListPresenter, FilesListAdapterDataSource, FileDetailsPresenter, EnterPasswordPresenter {
 
     @Inject
     Context context;
@@ -72,6 +72,8 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     private PublishSubject<String> deleteFileObservable;
 
     private PublishSubject<String[]> renameObservable;
+
+    private PublishSubject<String[]> setPasswordObservable;
 
     private List<FileDetails> actualFiles;
 
@@ -327,6 +329,39 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
                     }
                 });
+
+        setPasswordObservable = PublishSubject.create();
+        setPasswordObservable.observeOn(Schedulers.newThread())
+                .subscribe(new Observer<String[]>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String[] strings) {
+                        selectDriveView.showLoading();
+                        if (serverConnectorAdapter.setPassword(strings[0], strings[1])){
+                            selectDriveView.hideLoading();
+                            selectDriveView.gotoFileView();
+                        }
+                        else {
+                            selectDriveView.showWrongPassword();
+                            selectDriveView.showPasswordDialog();
+                        }
+                        selectDriveView.hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -461,4 +496,9 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     }
 
 
+    @Override
+    public void setPassword(String userName, String password) {
+        String[] temp = {userName, password};
+        setPasswordObservable.onNext(temp);
+    }
 }
