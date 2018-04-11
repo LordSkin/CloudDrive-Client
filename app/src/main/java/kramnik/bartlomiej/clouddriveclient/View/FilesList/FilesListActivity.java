@@ -118,6 +118,15 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
         });
     }
 
+    @Override
+    public void shareFile(String address) {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = address;
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingIntent, this.getResources().getString(R.string.shareVia)));
+    }
+
 
     @Override
     public void onClick(View view) {

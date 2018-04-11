@@ -59,8 +59,16 @@ public class ServerConnectorImpl implements ServerConnector {
         return baseAddress;
     }
 
+    @Override
+    public String getFileToken(String filePath) throws IOException {
+        Request request = new Request.Builder()
+                .url(baseAddress+"/token/"+filePath)
+                .build();
 
-
+        Response response = client.newCall(request).execute();
+        String s = response.body().string();
+        return s;
+    }
 
 
     @Override

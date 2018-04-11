@@ -75,6 +75,8 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
     private PublishSubject<String[]> setPasswordObservable;
 
+    private PublishSubject<Integer[]> addressFileObbservable;
+
     private List<FileDetails> actualFiles;
 
 
@@ -362,6 +364,75 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
                     }
                 });
+
+        addressFileObbservable = PublishSubject.create();
+        addressFileObbservable.observeOn(Schedulers.newThread())
+                .subscribe(new Observer<Integer[]>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Integer[] s) {
+                        if(s[0]==0){
+                            filesListView.showLoading();
+                            try {
+                                String address = serverConnectorAdapter.getFileAddress(actualFiles.get(s[1]).getName());
+                                filesListView.shareFile(address);
+                            }
+                            catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            finally {
+                                filesListView.hideLoading();
+                            }
+                        }
+                        else {
+                            try {
+                                String url = serverConnectorAdapter.getFileAddress(actualFiles.get(s[1]).getName());
+                                downloader.download(url, actualFiles.get(s[1]).getName(), false)
+                                        .subscribe(new Observer<String>() {
+                                            @Override
+                                            public void onSubscribe(Disposable d) {
+
+                                            }
+
+                                            @Override
+                                            public void onNext(String s) {
+                                                File result = new File(s.replace("file://",""));
+                                                filesListView.operFile(result);
+                                            }
+
+                                            @Override
+                                            public void onError(Throwable e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            @Override
+                                            public void onComplete() {
+
+                                            }
+                                        });
+                            }
+                            catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -421,30 +492,8 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
                 filesListView.refreshView();
             }
             else {
-                String url = serverConnectorAdapter.getFileAddress(actualFiles.get(pos).getName()).replace("\\\\","//");
-               downloader.download(url, actualFiles.get(pos).getName(), false)
-                       .subscribe(new Observer<String>() {
-                           @Override
-                           public void onSubscribe(Disposable d) {
-
-                           }
-
-                           @Override
-                           public void onNext(String s) {
-                                 File result = new File(s.replace("file://",""));
-                                 filesListView.operFile(result);
-                           }
-
-                           @Override
-                           public void onError(Throwable e) {
-                                e.printStackTrace();
-                           }
-
-                           @Override
-                           public void onComplete() {
-
-                           }
-                       });
+                Integer[] temp = {1, pos};
+               addressFileObbservable.onNext(temp);
             }
         }
         catch (Exception e){
@@ -491,8 +540,9 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     }
 
     @Override
-    public String getFileAddress(int pos) {
-        return serverConnectorAdapter.getFileAddress(actualFiles.get(pos).getName());
+    public void getFileAddress(int pos) {
+        Integer[] temp = {0, pos};
+        addressFileObbservable.onNext(temp);
     }
 
 

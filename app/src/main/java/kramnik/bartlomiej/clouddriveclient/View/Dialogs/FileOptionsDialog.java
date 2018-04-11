@@ -15,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import dagger.Provides;
@@ -111,10 +113,7 @@ public class FileOptionsDialog extends DialogFragment implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        String shareBody = presenter.getFileAddress(position);
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-        startActivity(Intent.createChooser(sharingIntent, this.getResources().getString(R.string.shareVia)));
+        presenter.getFileAddress(position);
+
     }
 }

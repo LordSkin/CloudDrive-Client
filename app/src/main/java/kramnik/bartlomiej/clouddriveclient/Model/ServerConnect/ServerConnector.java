@@ -30,4 +30,6 @@ public interface ServerConnector {
     boolean ping();
 
     String getBaseAddress();
+
+    String getFileToken(String filePath) throws IOException;
 }

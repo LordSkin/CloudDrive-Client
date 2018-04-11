@@ -1,5 +1,7 @@
 package kramnik.bartlomiej.clouddriveclient.Presenter;
 
+import java.io.IOException;
+
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
 
 /**
@@ -14,6 +16,6 @@ public interface FileDetailsPresenter {
 
     FileDetails getFileDetails(int pos);
 
-    String getFileAddress(int pos);
+    void getFileAddress(int pos);
 
 }

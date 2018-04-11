@@ -49,6 +49,7 @@ public class ServerConnectorAdapter {
         return serverConnector.rename(path + name, newName);
     }
 
+
     public boolean addFile(File file, String name) throws IOException {
         if (name == null) throw new NullPointerException();
         return serverConnector.addFile(file, path + name);
@@ -80,7 +81,8 @@ public class ServerConnectorAdapter {
         path = "";
     }
 
-    public String getFileAddress(String name){
-        return serverConnector.getBaseAddress()+"/get/"+path +fileSeparator + name;
+    public String getFileAddress(String name) throws IOException {
+        String token = serverConnector.getFileToken(path+fileSeparator+name);
+        return (serverConnector.getBaseAddress()+"/get/"+path +fileSeparator + name+"/"+token).replace("\\\\","//");
     }
 }
