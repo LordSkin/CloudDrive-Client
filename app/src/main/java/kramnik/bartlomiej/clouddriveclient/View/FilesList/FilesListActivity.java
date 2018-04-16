@@ -6,6 +6,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -20,15 +24,18 @@ import javax.inject.Inject;
 import kramnik.bartlomiej.clouddriveclient.Presenter.FilesListPresenter;
 import kramnik.bartlomiej.clouddriveclient.R;
 import kramnik.bartlomiej.clouddriveclient.Root.App;
+import kramnik.bartlomiej.clouddriveclient.View.Dialogs.CreateFolderDialog;
 import kramnik.bartlomiej.clouddriveclient.View.Dialogs.FileOptionsDialog;
+import kramnik.bartlomiej.clouddriveclient.View.Dialogs.FilterDialog;
 
-public class FilesListActivity extends Activity implements FilesListView, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class FilesListActivity extends AppCompatActivity implements FilesListView, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private ProgressBar progressBar;
     private ListView listView;
     private FilesListAdapter adapter;
     private FloatingActionButton addButton;
     private FloatingActionButton backButton;
+    private Toolbar toolbar;
 
 
     private final int requestCodeGetFile = 23485;
@@ -47,6 +54,8 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
         listView = (ListView) findViewById(R.id.listView);
         addButton = (FloatingActionButton) findViewById(R.id.addButton);
         backButton = (FloatingActionButton) findViewById(R.id.backButton);
+        toolbar = (Toolbar) findViewById(R.id.toolbar1);
+        setSupportActionBar(toolbar);
 
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
@@ -58,13 +67,34 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
         adapter = new FilesListAdapter();
         ((App) getApplication()).getAppComponent().inject(adapter);
 
-
+        getSupportActionBar().setTitle(presenter.getDriveName());
         presenter.setFilesListView(this);
         presenter.getFilesList();
         listView.setAdapter(adapter);
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.file_list_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.addFolder:
+                CreateFolderDialog dialog = new CreateFolderDialog();
+                dialog.show(getFragmentManager(), "asdasd");
+                return true;
+
+            case R.id.filter:
+                FilterDialog dialog2 = new FilterDialog();
+                dialog2.show(getFragmentManager(), "asdasd");
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void showLoading() {
@@ -87,7 +117,7 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
         newIntent.setDataAndType(Uri.fromFile(file), mimeType);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
-            if (mimeType==null) throw new NullPointerException();
+            if (mimeType == null) throw new NullPointerException();
             startActivity(newIntent);
         }
         catch (Exception e) {
@@ -172,12 +202,10 @@ public class FilesListActivity extends Activity implements FilesListView, View.O
     }
 
 
-
-
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-            Bundle args = new Bundle();
-            args.putInt("pos", i);
+        Bundle args = new Bundle();
+        args.putInt("pos", i);
 
         FileOptionsDialog dialog = new FileOptionsDialog();
         dialog.setPosition(i);

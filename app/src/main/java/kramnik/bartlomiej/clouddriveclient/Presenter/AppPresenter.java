@@ -36,7 +36,7 @@ import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.SelectDriveView;
  * App presenter implementation
  */
 
-public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePresenter, AddServerPresenter, FilesListPresenter, FilesListAdapterDataSource, FileDetailsPresenter, EnterPasswordPresenter {
+public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePresenter, AddServerPresenter, FilesListPresenter, FilesListAdapterDataSource, FileDetailsPresenter, EnterPasswordPresenter, FilterDialogPresenter, CreateFolderDialogPresenter {
 
     @Inject
     Context context;
@@ -77,12 +77,18 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
     private PublishSubject<Integer[]> addressFileObbservable;
 
-    private List<FileDetails> actualFiles;
+    private PublishSubject<String> createFolderObservable;
+
+    private List<FileDetails> actualFiles, allFiles;
+
+    private String selectedDriveName;
 
 
     public AppPresenter() {
 
+        selectedDriveName = "";
         actualFiles = new ArrayList<FileDetails>();
+        allFiles = new ArrayList<FileDetails>();
         pingServersObservable = PublishSubject.create();
         pingServersObservable.observeOn(Schedulers.newThread())
                 .subscribe(new Observer<String>() {
@@ -159,6 +165,8 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
                         try {
                             filesListView.showLoading();
                             actualFiles = serverConnectorAdapter.getList();
+                            allFiles.clear();
+                            allFiles.addAll(actualFiles);
                             filesListView.hideLoading();
                             filesListView.refreshView();
                         }
@@ -234,6 +242,8 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
                             filesListView.showLoading();
                                 serverConnectorAdapter.goTo(actualFiles.get(integer).getName());
                                 actualFiles = serverConnectorAdapter.getList();
+                            allFiles.clear();
+                            allFiles.addAll(actualFiles);
                                 filesListView.refreshView();
                         }
                         catch (Exception e){
@@ -275,6 +285,8 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
                             filesListView.showLoading();
                             serverConnectorAdapter.delete(s);
                             actualFiles = serverConnectorAdapter.getList();
+                            allFiles.clear();
+                            allFiles.addAll(actualFiles);
                         }
                         catch (IOException e) {
                             e.printStackTrace();
@@ -311,6 +323,8 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
                             filesListView.showLoading();
                             serverConnectorAdapter.rename(strings[0], strings[1]);
                             actualFiles = serverConnectorAdapter.getList();
+                            allFiles.clear();
+                            allFiles.addAll(actualFiles);
                         }
                         catch (IOException e) {
                             e.printStackTrace();
@@ -433,6 +447,37 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
                     }
                 });
+
+        createFolderObservable = PublishSubject.create();
+        createFolderObservable.observeOn(Schedulers.newThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        try {
+                            filesListView.showLoading();
+                            serverConnectorAdapter.addFolder(s);
+                            getFilesList();
+                        }
+                        catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -454,6 +499,7 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     @Override
     public void itemSelected(int pos) {
         serverConnectorAdapter = new ServerConnectorAdapter(new ServerConnectorImpl(context, serversList.getServer(pos).getIp()), new JsonConverter(new Gson()));
+        selectedDriveName = serversList.getServer(pos).getName();
     }
 
     @Override
@@ -489,6 +535,8 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
             if(actualFiles.get(pos).getFileType()== FileType.Folder){
                 serverConnectorAdapter.goTo(actualFiles.get(pos).getName());
                 actualFiles = serverConnectorAdapter.getList();
+                allFiles.clear();
+                allFiles.addAll(actualFiles);
                 filesListView.refreshView();
             }
             else {
@@ -524,6 +572,11 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     }
 
     @Override
+    public String getDriveName() {
+        return selectedDriveName;
+    }
+
+    @Override
     public void deleteFile(int pos) {
         deleteFileObservable.onNext(actualFiles.get(pos).getName());
     }
@@ -550,5 +603,72 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     public void setPassword(String userName, String password) {
         String[] temp = {userName, password};
         setPasswordObservable.onNext(temp);
+    }
+
+    @Override
+    public void filterAudio() {
+        actualFiles.clear();
+        for (FileDetails f : allFiles){
+            if(f.getFileType()==FileType.Audio){
+                actualFiles.add(f);
+            }
+        }
+        filesListView.refreshView();
+    }
+
+    @Override
+    public void filterImages() {
+        actualFiles.clear();
+        for (FileDetails f : allFiles){
+            if(f.getFileType()==FileType.Image){
+                actualFiles.add(f);
+            }
+        }
+        filesListView.refreshView();
+    }
+
+    @Override
+    public void filterDocs() {
+        actualFiles.clear();
+        for (FileDetails f : allFiles){
+            if(f.getFileType()==FileType.TextFile){
+                actualFiles.add(f);
+            }
+        }
+        filesListView.refreshView();
+    }
+
+    @Override
+    public void filterExec() {
+        actualFiles.clear();
+        for (FileDetails f : allFiles){
+            if(f.getFileType()==FileType.Program){
+                actualFiles.add(f);
+            }
+        }
+        filesListView.refreshView();
+    }
+
+    @Override
+    public void filterOthers() {
+        actualFiles.clear();
+        for (FileDetails f : allFiles){
+            if(f.getFileType()==FileType.Other){
+                actualFiles.add(f);
+            }
+        }
+        filesListView.refreshView();
+    }
+
+    @Override
+    public void clearFilters() {
+        actualFiles.clear();
+        actualFiles.addAll(allFiles);
+        filesListView.refreshView();
+    }
+
+    @Override
+    public void createFolder(String name) {
+        createFolderObservable.onNext(name);
     }
 }

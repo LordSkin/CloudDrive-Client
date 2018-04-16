@@ -21,4 +21,6 @@ public interface FilesListPresenter {
     void addFile(Uri file);
 
     void goBack();
+
+    String getDriveName();
 }

@@ -15,4 +15,13 @@
     <string name="userName">nazwa użytkownika</string>
     <string name="password">hasło</string>
     <string name="wrongPassword">Podane dane są błędne!</string>
+    <string name="addFolder">Dodaj folder</string>
+    <string name="filter">Filtruj</string>
+    <string name="images">Obrazy</string>
+    <string name="audio"> Dźwięki</string>
+    <string name="docs">Dokumenty</string>
+    <string name="exec">Programy</string>
+    <string name="folders">Katalogi</string>
+    <string name="others">Inne</string>
+    <string name="clear">Wyczyść</string>
 </resources>
