@@ -17,15 +17,15 @@ public interface ServerConnector {
 
     List<FileDetails> getList(String url, JsonConverter converter) throws IOException;
 
-    boolean setPassword(String userName, String password);
+    int setPassword(String userName, String password) throws IOException;
 
-    boolean delete(String url) throws IOException;
+    int delete(String url) throws IOException;
 
-    boolean rename(String url, String newName) throws IOException;
+    int rename(String url, String newName) throws IOException;
 
-    boolean addFile(File file, String url) throws IOException;
+    int addFile(File file, String url) throws IOException;
 
-    boolean addFolder(String url) throws IOException;
+    int addFolder(String url) throws IOException;
 
     boolean ping();
 

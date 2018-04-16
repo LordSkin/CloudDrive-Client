@@ -83,7 +83,7 @@ public class ServerConnectorImpl implements ServerConnector {
     }
 
     @Override
-    public boolean setPassword(final String userName, final String password) {
+    public int setPassword(final String userName, final String password) throws IOException {
         OkHttpClient newClient = new OkHttpClient
                 .Builder()
                 .connectTimeout(2, TimeUnit.SECONDS)
@@ -96,7 +96,6 @@ public class ServerConnectorImpl implements ServerConnector {
             }
         }).build();
 
-        try {
             Request request = new Request.Builder()
                     .url(baseAddress+"/list/")
                     .build();
@@ -104,40 +103,35 @@ public class ServerConnectorImpl implements ServerConnector {
 
             if(response.code()!=401){
                 client = newClient;
-                return true;
+                return response.code();
             }
             else {
-                return false;
+                return response.code();
             }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     @Override
-    public boolean delete(String url) throws IOException {
+    public int delete(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(baseAddress+url)
                 .delete()
                 .build();
         Response response = client.newCall(request).execute();
-        return response.code()==200||response.code()==201;
+        return response.code();
     }
 
     @Override
-    public boolean rename(String url, String newName) throws IOException {
+    public int rename(String url, String newName) throws IOException {
         Request request = new Request.Builder()
                 .url(baseAddress+"rename/"+url+"/"+newName)
                 .get()
                 .build();
         Response response = client.newCall(request).execute();
-        return response.code()==200||response.code()==201;
+        return response.code();
     }
 
     @Override
-    public boolean addFile(File file, String url) throws IOException {
+    public int addFile(File file, String url) throws IOException {
         RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("file", "file", RequestBody.create(MediaType.parse("other"), file))
                 .build();
@@ -145,17 +139,17 @@ public class ServerConnectorImpl implements ServerConnector {
 
         Response response = client.newCall(request).execute();
 
-        return response.code()==200||response.code()==201;
+        return response.code();
     }
 
     @Override
-    public boolean addFolder(String url) throws IOException {
+    public int addFolder(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(baseAddress+"/folder/"+url)
                 .get()
                 .build();
         Response response = client.newCall(request).execute();
-        return response.code()==200||response.code()==201;
+        return response.code();
     }
 
     @Override

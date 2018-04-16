@@ -18,4 +18,6 @@ public interface FilesListView {
 
     void shareFile(String address);
 
+    void showError(int id);
+
 }

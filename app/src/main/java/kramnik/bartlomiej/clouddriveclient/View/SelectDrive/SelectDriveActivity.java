@@ -20,7 +20,7 @@ import kramnik.bartlomiej.clouddriveclient.View.Dialogs.AddServerDialog;
 import kramnik.bartlomiej.clouddriveclient.View.Dialogs.EntryPasswordDialog;
 import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListActivity;
 
-public class SelectDriveActivity extends AppCompatActivity implements View.OnClickListener, SelectDriveView, AdapterView.OnItemClickListener {
+public class SelectDriveActivity extends AppCompatActivity implements View.OnClickListener, SelectDriveView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private ProgressBar progressBar;
     private ListView listView;
@@ -47,6 +47,7 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
         addButton.setOnClickListener(this);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
 
         presenter.setSelectDriveView(this);
     }
@@ -111,12 +112,14 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
         startActivity(intent);
     }
 
+
+
     @Override
-    public void showWrongPassword() {
+    public void showError(final int id) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.wrongPassword), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(id), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -130,5 +133,11 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
         dialog.show(getFragmentManager(), getResources().getString(R.string.enterPass));
 
 
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        presenter.itemDeleted(i);
+        return true;
     }
 }

@@ -157,6 +157,17 @@ public class FilesListActivity extends AppCompatActivity implements FilesListVie
         startActivity(Intent.createChooser(sharingIntent, this.getResources().getString(R.string.shareVia)));
     }
 
+    @Override
+    public void showError(final int id) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), getResources().getString(id), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
 
     @Override
     public void onClick(View view) {

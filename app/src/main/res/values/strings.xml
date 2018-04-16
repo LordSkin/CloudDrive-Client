@@ -24,4 +24,7 @@
     <string name="folders">Katalogi</string>
     <string name="others">Inne</string>
     <string name="clear">Wyczyść</string>
+    <string name="connectionError">Błąd łączenia z serwerem!</string>
+    <string name="fileError">Błędna nazwa!</string>
+    <string name="emptyName">Nazwa nie może być pusta!</string>
 </resources>

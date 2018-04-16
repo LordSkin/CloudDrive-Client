@@ -16,6 +16,6 @@ public interface SelectDriveView {
 
     void gotoFileView();
 
-    void showWrongPassword();
+    void showError(int id);
 
 }

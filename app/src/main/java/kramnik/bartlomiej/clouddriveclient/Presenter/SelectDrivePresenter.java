@@ -11,4 +11,6 @@ public interface SelectDrivePresenter {
     void setSelectDriveView(SelectDriveView view);
 
     void itemSelected(int pos);
+
+    void itemDeleted(int pos);
 }

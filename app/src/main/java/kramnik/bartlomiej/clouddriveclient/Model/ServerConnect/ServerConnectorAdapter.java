@@ -1,10 +1,15 @@
 package kramnik.bartlomiej.clouddriveclient.Model.ServerConnect;
 
+import android.accounts.AuthenticatorException;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.util.List;
 
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
+import kramnik.bartlomiej.clouddriveclient.Model.Exceptions.WrongPathException;
 import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
 
 /**
@@ -28,36 +33,43 @@ public class ServerConnectorAdapter {
         this.converter = converter;
     }
 
-    public boolean setPassword(String userName, String password){
-        return serverConnector.setPassword(userName, password);
+    public boolean setPassword(String userName, String password) throws IOException {
+        int code =  serverConnector.setPassword(userName, password);
+        return code==200||code==201;
     }
 
     public List<FileDetails> getList() throws IOException {
-
-        List<FileDetails> list = serverConnector.getList(path, converter);
-
-
         return serverConnector.getList(path, converter);
     }
 
-    public boolean delete(String name) throws IOException {
+    public boolean delete(String name) throws IOException, WrongPathException {
         if (name == null) throw new NullPointerException();
-        return serverConnector.delete(path + name);
+        int code =  serverConnector.delete(path + name);
+
+        if (code==404) throw new WrongPathException();
+        return code==200||code==201;
     }
 
-    public boolean rename(String name, String newName) throws IOException {
-        return serverConnector.rename(path + name, newName);
+    public boolean rename(String name, String newName) throws IOException, WrongPathException {
+        int code =  serverConnector.rename(path + name, newName);
+        if (code==404) throw new WrongPathException();
+        return code==200||code==201;
+
     }
 
 
-    public boolean addFile(File file, String name) throws IOException {
+    public boolean addFile(File file, String name) throws IOException, WrongPathException {
         if (name == null) throw new NullPointerException();
-        return serverConnector.addFile(file, path + name);
+        int code =  serverConnector.addFile(file, path + name);
+        if (code==404) throw new WrongPathException();
+        return code==200||code==201;
     }
 
-    public boolean addFolder(String name) throws IOException {
+    public boolean addFolder(String name) throws IOException, WrongPathException {
         if (name == null) throw new NullPointerException();
-        return serverConnector.addFolder(path + name);
+        int code =  serverConnector.addFolder(path + name);
+        if (code==404) throw new WrongPathException();
+        return code==200||code==201;
     }
 
     public void goUp() {
