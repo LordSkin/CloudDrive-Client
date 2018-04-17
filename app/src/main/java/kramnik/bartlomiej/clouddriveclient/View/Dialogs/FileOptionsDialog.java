@@ -59,27 +59,27 @@ public class FileOptionsDialog extends DialogFragment implements View.OnClickLis
         ImageView imageView = (ImageView)result.findViewById(R.id.typeIcon);
         switch (type){
             case Audio:
-                imageView.setImageResource(R.drawable.audio);
+                imageView.setImageResource(R.drawable.audio_pink);
                 break;
 
             case Image:
-                imageView.setImageResource(R.drawable.image);
+                imageView.setImageResource(R.drawable.image_pink);
                 break;
 
             case Program:
-                imageView.setImageResource(R.drawable.code);
+                imageView.setImageResource(R.drawable.code_pink);
                 break;
 
             case TextFile:
-                imageView.setImageResource(R.drawable.doc);
+                imageView.setImageResource(R.drawable.doc_pink);
                 break;
 
             case Folder:
-                imageView.setImageResource(R.drawable.folder);
+                imageView.setImageResource(R.drawable.folder_pink);
                 break;
 
             default:
-                imageView.setImageResource(R.drawable.question);
+                imageView.setImageResource(R.drawable.question_pink);
                 break;
         }
 
@@ -90,6 +90,7 @@ public class FileOptionsDialog extends DialogFragment implements View.OnClickLis
         shareButton.setOnClickListener(this);
 
         editText = (EditText) result.findViewById(R.id.editText);
+        editText.setText(fileName);
 
 
         builder.setView(result);

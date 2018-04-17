@@ -127,10 +127,12 @@ public class SelectDriveActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        presenter.itemSelected(i);
-        showLoading();
-        EntryPasswordDialog dialog = new EntryPasswordDialog();
-        dialog.show(getFragmentManager(), getResources().getString(R.string.enterPass));
+        if(presenter.itemSelected(i)){
+            showLoading();
+            EntryPasswordDialog dialog = new EntryPasswordDialog();
+            dialog.show(getFragmentManager(), getResources().getString(R.string.enterPass));
+        }
+
 
 
     }

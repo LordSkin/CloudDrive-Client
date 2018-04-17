@@ -60,14 +60,14 @@ public class ServerConnectorAdapter {
 
     public boolean addFile(File file, String name) throws IOException, WrongPathException {
         if (name == null) throw new NullPointerException();
-        int code =  serverConnector.addFile(file, path + name);
+        int code =  serverConnector.addFile(file, path + fileSeparator + name);
         if (code==404) throw new WrongPathException();
         return code==200||code==201;
     }
 
     public boolean addFolder(String name) throws IOException, WrongPathException {
         if (name == null) throw new NullPointerException();
-        int code =  serverConnector.addFolder(path + name);
+        int code =  serverConnector.addFolder(path + fileSeparator + name);
         if (code==404) throw new WrongPathException();
         return code==200||code==201;
     }

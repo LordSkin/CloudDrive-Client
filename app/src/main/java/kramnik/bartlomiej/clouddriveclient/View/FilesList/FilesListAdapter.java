@@ -51,27 +51,27 @@ public class FilesListAdapter extends BaseAdapter {
         View result = inflater.inflate(R.layout.files_list_cell,null);
         switch (file.getFileType()){
             case Audio:
-                ((ImageView)result.findViewById(R.id.icon)).setImageResource(R.drawable.audio);
+                ((ImageView)result.findViewById(R.id.icon)).setImageResource(R.drawable.audio_pink);
                 break;
 
             case Image:
-                ((ImageView)result.findViewById(R.id.icon)).setImageResource(R.drawable.image);
+                ((ImageView)result.findViewById(R.id.icon)).setImageResource(R.drawable.image_pink);
                 break;
 
             case Folder:
-                ((ImageView)result.findViewById(R.id.icon)).setImageResource(R.drawable.folder);
+                ((ImageView)result.findViewById(R.id.icon)).setImageResource(R.drawable.folder_pink);
                 break;
 
             case Program:
-                ((ImageView)result.findViewById(R.id.icon)).setImageResource(R.drawable.code);
+                ((ImageView)result.findViewById(R.id.icon)).setImageResource(R.drawable.code_pink);
                 break;
 
             case TextFile:
-                ((ImageView)result.findViewById(R.id.icon)).setImageResource(R.drawable.doc);
+                ((ImageView)result.findViewById(R.id.icon)).setImageResource(R.drawable.doc_pink);
                 break;
 
             case Other:
-                ((ImageView)result.findViewById(R.id.icon)).setImageResource(R.drawable.question);
+                ((ImageView)result.findViewById(R.id.icon)).setImageResource(R.drawable.question_pink);
                 break;
         }
 

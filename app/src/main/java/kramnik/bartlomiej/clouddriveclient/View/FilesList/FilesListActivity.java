@@ -1,11 +1,16 @@
 package kramnik.bartlomiej.clouddriveclient.View.FilesList;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -28,7 +33,7 @@ import kramnik.bartlomiej.clouddriveclient.View.Dialogs.CreateFolderDialog;
 import kramnik.bartlomiej.clouddriveclient.View.Dialogs.FileOptionsDialog;
 import kramnik.bartlomiej.clouddriveclient.View.Dialogs.FilterDialog;
 
-public class FilesListActivity extends AppCompatActivity implements FilesListView, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class FilesListActivity extends AppCompatActivity implements FilesListView, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private ProgressBar progressBar;
     private ListView listView;
@@ -36,6 +41,7 @@ public class FilesListActivity extends AppCompatActivity implements FilesListVie
     private FloatingActionButton addButton;
     private FloatingActionButton backButton;
     private Toolbar toolbar;
+    private SwipeRefreshLayout refresh;
 
 
     private final int requestCodeGetFile = 23485;
@@ -54,6 +60,7 @@ public class FilesListActivity extends AppCompatActivity implements FilesListVie
         listView = (ListView) findViewById(R.id.listView);
         addButton = (FloatingActionButton) findViewById(R.id.addButton);
         backButton = (FloatingActionButton) findViewById(R.id.backButton);
+        refresh = (SwipeRefreshLayout)findViewById(R.id.swiperefresh);
         toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
 
@@ -61,6 +68,7 @@ public class FilesListActivity extends AppCompatActivity implements FilesListVie
         listView.setOnItemLongClickListener(this);
         addButton.setOnClickListener(this);
         backButton.setOnClickListener(this);
+        refresh.setOnRefreshListener(this);
 
         ((App) getApplication()).getAppComponent().inject(this);
 
@@ -69,8 +77,15 @@ public class FilesListActivity extends AppCompatActivity implements FilesListVie
 
         getSupportActionBar().setTitle(presenter.getDriveName());
         presenter.setFilesListView(this);
-        presenter.getFilesList();
         listView.setAdapter(adapter);
+        presenter.getFilesList();
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 001);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 002);
+        }
 
     }
 
@@ -85,12 +100,12 @@ public class FilesListActivity extends AppCompatActivity implements FilesListVie
         switch (item.getItemId()) {
             case R.id.addFolder:
                 CreateFolderDialog dialog = new CreateFolderDialog();
-                dialog.show(getFragmentManager(), "asdasd");
+                dialog.show(getFragmentManager(), "");
                 return true;
 
             case R.id.filter:
                 FilterDialog dialog2 = new FilterDialog();
-                dialog2.show(getFragmentManager(), "asdasd");
+                dialog2.show(getFragmentManager(), "");
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -144,6 +159,7 @@ public class FilesListActivity extends AppCompatActivity implements FilesListVie
             @Override
             public void run() {
                 adapter.notifyDataSetChanged();
+                refresh.setRefreshing(false);
             }
         });
     }
@@ -225,4 +241,8 @@ public class FilesListActivity extends AppCompatActivity implements FilesListVie
     }
 
 
+    @Override
+    public void onRefresh() {
+        presenter.getFilesList();
+    }
 }

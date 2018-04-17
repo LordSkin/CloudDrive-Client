@@ -51,7 +51,6 @@ public class DrivesListAdapter extends BaseAdapter {
 
         View result = inflater.inflate(R.layout.select_drive_cell, null);
         ((TextView)result.findViewById(R.id.name)).setText(serverEntity.getName());
-        ((TextView)result.findViewById(R.id.address)).setText(serverEntity.getIp());
 
         if(serverEntity.isAvalible()){
             result.findViewById(R.id.colorBox).setBackgroundColor(Color.GREEN);

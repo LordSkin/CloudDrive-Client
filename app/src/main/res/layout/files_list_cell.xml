@@ -6,13 +6,20 @@
 
     <ImageView
         android:id="@+id/icon"
+        android:scaleType="center"
+        android:scaleY="1.2"
+        android:scaleX="1.2"
+        android:layout_marginVertical="16dp"
+        android:layout_marginHorizontal="8dp"
         android:src="@drawable/question"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/textView"
+        android:textSize="@dimen/normal"
         android:textColor="@color/colorPrimaryDark"
+        android:layout_marginVertical="16dp"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
 

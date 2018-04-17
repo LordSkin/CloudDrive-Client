@@ -10,7 +10,7 @@ public interface SelectDrivePresenter {
 
     void setSelectDriveView(SelectDriveView view);
 
-    void itemSelected(int pos);
+    boolean itemSelected(int pos);
 
     void itemDeleted(int pos);
 }
