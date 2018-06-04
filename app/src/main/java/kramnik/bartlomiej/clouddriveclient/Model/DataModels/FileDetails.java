@@ -16,7 +16,7 @@ public class FileDetails {
         this.fileType = fileType;
         this.name = name;
         this.path = path;
-        this.displayName = name.replace(ServerConnectorAdapter.space, ' ');
+        this.displayName = name.replace(ServerConnectorAdapter.space, " ");
     }
 
     public FileType getFileType() {
@@ -32,7 +32,7 @@ public class FileDetails {
     }
 
     public String getDisplayName() {
-        if (displayName==null) this.displayName = name.replace(ServerConnectorAdapter.space, ' ');
+        if (displayName==null) this.displayName = name.replace(ServerConnectorAdapter.space, " ");
         return displayName;
     }
 }

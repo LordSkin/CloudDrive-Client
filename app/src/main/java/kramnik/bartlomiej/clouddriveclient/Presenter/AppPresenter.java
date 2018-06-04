@@ -453,7 +453,7 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
                         else {
                             try {
                                 String url = serverConnectorAdapter.getFileAddress(actualFiles.get(s[1]).getName());
-                                downloader.download(url, actualFiles.get(s[1]).getName(), false)
+                                downloader.download(url, actualFiles.get(s[1]).getDisplayName(), false)
                                         .subscribe(new Observer<String>() {
                                             @Override
                                             public void onSubscribe(Disposable d) {
@@ -462,7 +462,7 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
                                             @Override
                                             public void onNext(String s) {
-                                                File result = new File(s.replace("file://", ""));
+                                                File result = new File(s.replace("file://", "").replace("%20"," "));
                                                 filesListView.operFile(result);
                                             }
 

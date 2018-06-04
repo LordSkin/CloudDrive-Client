@@ -19,7 +19,7 @@ import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
 public class ServerConnectorAdapter {
 
     public static char fileSeparator = '&';
-    public static char space = '%';
+    public static String space = "ucode0020";
 
     private ServerConnector serverConnector;
 
