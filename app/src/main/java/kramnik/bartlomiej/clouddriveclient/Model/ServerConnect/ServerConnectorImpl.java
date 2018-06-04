@@ -123,8 +123,8 @@ public class ServerConnectorImpl implements ServerConnector {
     @Override
     public int rename(String url, String newName) throws IOException {
         Request request = new Request.Builder()
-                .url(baseAddress+"rename/"+url+"/"+newName)
-                .get()
+                .url(baseAddress+url+"/"+newName)
+                .put(RequestBody.create(null, new byte[0]))
                 .build();
         Response response = client.newCall(request).execute();
         return response.code();
@@ -146,7 +146,7 @@ public class ServerConnectorImpl implements ServerConnector {
     public int addFolder(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(baseAddress+"/folder/"+url)
-                .get()
+                .post(RequestBody.create(null, new byte[0]))
                 .build();
         Response response = client.newCall(request).execute();
         return response.code();

@@ -19,6 +19,7 @@ import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
 public class ServerConnectorAdapter {
 
     public static char fileSeparator = '&';
+    public static char space = '%';
 
     private ServerConnector serverConnector;
 
@@ -39,6 +40,7 @@ public class ServerConnectorAdapter {
     }
 
     public List<FileDetails> getList() throws IOException {
+        List<FileDetails> list = serverConnector.getList(path, converter);
         return serverConnector.getList(path, converter);
     }
 
@@ -51,7 +53,7 @@ public class ServerConnectorAdapter {
     }
 
     public boolean rename(String name, String newName) throws IOException, WrongPathException {
-        int code =  serverConnector.rename(path + name, newName);
+        int code =  serverConnector.rename(path +fileSeparator+ name, newName);
         if (code==404) throw new WrongPathException();
         return code==200||code==201;
 

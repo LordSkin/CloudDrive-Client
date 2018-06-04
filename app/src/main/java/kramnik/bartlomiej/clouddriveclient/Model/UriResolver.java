@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * REsolving document Uri to File
+ * Resolving document Uri to File
  */
 
 public class UriResolver {

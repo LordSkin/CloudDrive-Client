@@ -519,6 +519,9 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
                             filesListView.showError(R.string.fileNameError);
                             e.printStackTrace();
                         }
+                        finally {
+                            filesListView.hideLoading();
+                        }
                     }
 
                     @Override
@@ -569,10 +572,6 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
     @Override
     public void addServer(ServerEntity serverEntity) {
-        if (serverEntity.getName().trim().length()<1||serverEntity.getIp().trim().length()<1){
-            selectDriveView.showError(R.string.emptyName);
-            return;
-        }
         addServerObservable.onNext(serverEntity);
         refreshStatus();
     }

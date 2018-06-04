@@ -50,7 +50,7 @@ public class FileOptionsDialog extends DialogFragment implements View.OnClickLis
 
         ((App)getActivity().getApplication()).getAppComponent().inject(this);
 
-        fileName = presenter.getFileDetails(position).getName();
+        fileName = presenter.getFileDetails(position).getDisplayName();
         type = presenter.getFileDetails(position).getFileType();
 
         View result = LayoutInflater.from(getContext()).inflate(R.layout.file_options_dialog, null);

@@ -17,6 +17,7 @@
 
     <EditText
         android:id="@+id/port"
+        android:inputType="number"
         android:hint="@string/serverPort"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

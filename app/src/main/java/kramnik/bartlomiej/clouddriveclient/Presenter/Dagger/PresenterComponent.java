@@ -4,7 +4,7 @@ import dagger.Component;
 import kramnik.bartlomiej.clouddriveclient.Presenter.AppPresenter;
 
 /**
- * Created by Mao on 14.03.2018.
+ * Dagger component for presenter
  */
 
 @Component(modules = PresenterModule.class)

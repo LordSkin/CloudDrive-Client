@@ -28,6 +28,7 @@
     <string name="connectionError">Błąd łączenia z serwerem!</string>
     <string name="fileNameError">Błędna nazwa!</string>
     <string name="emptyName">Nazwa nie może być pusta!</string>
+    <string name="emptyAddress">Adres nie może być pusty!</string>
     <string name="serverUnreacheable">Dysk nie osiągalny!</string>
     <string name="isBaseFolder">Jesteś już w folderze bazowym!</string>
     <string name="fileError">Błąd plików!</string>

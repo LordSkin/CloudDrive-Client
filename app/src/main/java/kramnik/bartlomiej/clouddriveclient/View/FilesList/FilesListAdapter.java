@@ -75,7 +75,7 @@ public class FilesListAdapter extends BaseAdapter {
                 break;
         }
 
-        ((TextView)result.findViewById(R.id.textView)).setText(file.getName());
+        ((TextView)result.findViewById(R.id.textView)).setText(file.getDisplayName());
 
         return result;
     }
