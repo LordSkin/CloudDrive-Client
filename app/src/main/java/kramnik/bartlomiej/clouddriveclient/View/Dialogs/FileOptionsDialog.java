@@ -31,6 +31,8 @@ import kramnik.bartlomiej.clouddriveclient.Root.App;
 
 public class FileOptionsDialog extends DialogFragment implements View.OnClickListener {
 
+    public static int maxTitleLength = 14;
+
     String fileName;
     FileType type;
     int position;
@@ -84,7 +86,7 @@ public class FileOptionsDialog extends DialogFragment implements View.OnClickLis
         }
 
         TextView name = (TextView)result.findViewById(R.id.fileName);
-        name.setText(fileName);
+        name.setText(fileName.length()<=maxTitleLength ? fileName : fileName.substring(0,maxTitleLength)+"...");
 
         ImageButton shareButton = (ImageButton)result.findViewById(R.id.shareButton);
         shareButton.setOnClickListener(this);
