@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import kramnik.bartlomiej.clouddriveclient.Model.DataModels.Event;
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
 import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
 
@@ -32,4 +33,6 @@ public interface ServerConnector {
     String getBaseAddress();
 
     String getFileToken(String filePath) throws IOException;
+
+    List<Event> getLogs(JsonConverter converter) throws IOException;
 }

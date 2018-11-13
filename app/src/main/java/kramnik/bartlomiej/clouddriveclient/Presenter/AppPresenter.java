@@ -1,6 +1,5 @@
 package kramnik.bartlomiej.clouddriveclient.Presenter;
 
-import android.accounts.AuthenticatorException;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.database.Cursor;
@@ -18,10 +17,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import kramnik.bartlomiej.clouddriveclient.Model.DataBase.ServersList;
+import kramnik.bartlomiej.clouddriveclient.Model.DataModels.Event;
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileType;
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.ServerEntity;
@@ -34,12 +35,13 @@ import kramnik.bartlomiej.clouddriveclient.Model.UriResolver;
 import kramnik.bartlomiej.clouddriveclient.R;
 import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListView;
 import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.SelectDriveView;
+import kramnik.bartlomiej.clouddriveclient.View.ShowLogs.LogListView;
 
 /**
  * App presenter implementation
  */
 
-public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePresenter, AddServerPresenter, FilesListPresenter, FilesListAdapterDataSource, FileDetailsPresenter, EnterPasswordPresenter, FilterDialogPresenter, CreateFolderDialogPresenter {
+public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePresenter, AddServerPresenter, FilesListPresenter, FilesListAdapterDataSource, FileDetailsPresenter, EnterPasswordPresenter, FilterDialogPresenter, CreateFolderDialogPresenter, LogsAdapterPresenter, LogsActivityPresenter {
 
     @Inject
     Context context;
@@ -61,6 +63,8 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     private SelectDriveView selectDriveView;
 
     private FilesListView filesListView;
+
+    private LogListView logListView;
 
     private PublishSubject<ServerEntity> addServerObservable;
 
@@ -84,9 +88,13 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
     private PublishSubject<String> createFolderObservable;
 
+    private PublishSubject<Integer> getLogsObservable;
+
     private List<FileDetails> actualFiles, allFiles;
 
     private String selectedDriveName;
+
+    private List<Event> eventsList;
 
 
     public AppPresenter() {
@@ -94,6 +102,7 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
         selectedDriveName = "";
         actualFiles = new ArrayList<FileDetails>();
         allFiles = new ArrayList<FileDetails>();
+        eventsList = new ArrayList<Event>();
         pingServersObservable = PublishSubject.create();
         pingServersObservable.observeOn(Schedulers.newThread())
                 .subscribe(new Observer<String>() {
@@ -534,6 +543,41 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
 
                     }
                 });
+
+        getLogsObservable = PublishSubject.create();
+        getLogsObservable.observeOn(Schedulers.newThread())
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        logListView.showLoading();
+                        try {
+                            eventsList = serverConnectorAdapter.getLogs();
+                            logListView.reloadList();
+                        }
+                        catch (IOException e) {
+                            logListView.showError(R.string.logsError);
+                            e.printStackTrace();
+                        }
+                        finally {
+                            logListView.hideLoading();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -584,6 +628,18 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
     public FileDetails getItem(int i) {
         return actualFiles.get(i);
     }
+
+    @Override
+    public Event getLogItem(int i) {
+        return eventsList.get(i);
+    }
+
+    @Override
+    public int getItemsCount() {
+        return eventsList.size();
+    }
+
+
 
     @Override
     public List<FileDetails> getAll() {
@@ -748,5 +804,15 @@ public class AppPresenter implements DrivesListAdapterDataSource, SelectDrivePre
             return;
         }
         createFolderObservable.onNext(name);
+    }
+
+    @Override
+    public void setLogsView(LogListView view) {
+        this.logListView = view;
+    }
+
+    @Override
+    public void updateLogsList() {
+        getLogsObservable.onNext(0);
     }
 }

@@ -18,6 +18,7 @@
     <string name="wrongPassword">Podane dane są błędne!</string>
     <string name="addFolder">Dodaj folder</string>
     <string name="filter">Filtruj</string>
+    <string name="history">Pokaż historię</string>
     <string name="images">Obrazy</string>
     <string name="audio"> Dźwięki</string>
     <string name="docs">Dokumenty</string>
@@ -32,4 +33,5 @@
     <string name="serverUnreacheable">Dysk nie osiągalny!</string>
     <string name="isBaseFolder">Jesteś już w folderze bazowym!</string>
     <string name="fileError">Błąd plików!</string>
+    <string name="logsError">Błąd pobieranie historii operacji</string>
 </resources>

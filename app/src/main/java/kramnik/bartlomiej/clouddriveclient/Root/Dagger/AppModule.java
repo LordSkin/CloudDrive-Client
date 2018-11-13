@@ -13,6 +13,8 @@ import kramnik.bartlomiej.clouddriveclient.Presenter.FileDetailsPresenter;
 import kramnik.bartlomiej.clouddriveclient.Presenter.FilesListAdapterDataSource;
 import kramnik.bartlomiej.clouddriveclient.Presenter.FilesListPresenter;
 import kramnik.bartlomiej.clouddriveclient.Presenter.FilterDialogPresenter;
+import kramnik.bartlomiej.clouddriveclient.Presenter.LogsActivityPresenter;
+import kramnik.bartlomiej.clouddriveclient.Presenter.LogsAdapterPresenter;
 import kramnik.bartlomiej.clouddriveclient.Presenter.SelectDrivePresenter;
 
 /**
@@ -80,4 +82,10 @@ public class AppModule {
     public CreateFolderDialogPresenter provideCreateFolderPresenter(){
         return presenter;
     }
+
+    @Provides
+    public LogsAdapterPresenter provideLogsPresenter(){return presenter;}
+
+    @Provides
+    public LogsActivityPresenter provideLogsActivityPresenter(){return presenter;}
 }

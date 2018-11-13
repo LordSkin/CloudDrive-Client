@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.util.List;
 
+import kramnik.bartlomiej.clouddriveclient.Model.DataModels.Event;
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
 import kramnik.bartlomiej.clouddriveclient.Model.Exceptions.WrongPathException;
 import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
@@ -98,5 +99,9 @@ public class ServerConnectorAdapter {
     public String getFileAddress(String name) throws IOException {
         String token = serverConnector.getFileToken(path+fileSeparator+name);
         return (serverConnector.getBaseAddress()+"/get/"+path +fileSeparator + name+"/"+token).replace("\\\\","//");
+    }
+
+    public List<Event> getLogs() throws IOException {
+        return serverConnector.getLogs(converter);
     }
 }

@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import kramnik.bartlomiej.clouddriveclient.Model.DataModels.Event;
 import kramnik.bartlomiej.clouddriveclient.Model.DataModels.FileDetails;
 import kramnik.bartlomiej.clouddriveclient.Model.JsonConverter;
 import okhttp3.Authenticator;
@@ -68,6 +69,17 @@ public class ServerConnectorImpl implements ServerConnector {
         Response response = client.newCall(request).execute();
         String s = response.body().string();
         return s;
+    }
+
+    @Override
+    public List<Event> getLogs(JsonConverter converter) throws IOException {
+        Request request = new Request.Builder()
+                .url(baseAddress+"/logs/")
+                .build();
+
+        Response response = client.newCall(request).execute();
+        String s = response.body().string();
+        return converter.getEventsList(s);
     }
 
 

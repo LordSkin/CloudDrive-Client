@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-
     <application
         android:name=".Root.App"
         android:allowBackup="true"
@@ -22,7 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".View.FilesList.FilesListActivity"></activity>
+        <activity android:name=".View.FilesList.FilesListActivity" />
+        <activity android:name=".View.ShowLogs.ShowLogsActivity"></activity>
     </application>
 
 </manifest>

@@ -32,6 +32,7 @@ import kramnik.bartlomiej.clouddriveclient.Root.App;
 import kramnik.bartlomiej.clouddriveclient.View.Dialogs.CreateFolderDialog;
 import kramnik.bartlomiej.clouddriveclient.View.Dialogs.FileOptionsDialog;
 import kramnik.bartlomiej.clouddriveclient.View.Dialogs.FilterDialog;
+import kramnik.bartlomiej.clouddriveclient.View.ShowLogs.ShowLogsActivity;
 
 public class FilesListActivity extends AppCompatActivity implements FilesListView, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -106,6 +107,11 @@ public class FilesListActivity extends AppCompatActivity implements FilesListVie
             case R.id.filter:
                 FilterDialog dialog2 = new FilterDialog();
                 dialog2.show(getFragmentManager(), "");
+                return true;
+
+            case R.id.showLogs:
+                Intent intent = new Intent(this, ShowLogsActivity.class);
+                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);

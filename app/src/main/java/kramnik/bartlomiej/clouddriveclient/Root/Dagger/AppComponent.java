@@ -10,6 +10,8 @@ import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListActivity;
 import kramnik.bartlomiej.clouddriveclient.View.FilesList.FilesListAdapter;
 import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.DrivesListAdapter;
 import kramnik.bartlomiej.clouddriveclient.View.SelectDrive.SelectDriveActivity;
+import kramnik.bartlomiej.clouddriveclient.View.ShowLogs.LogsListAdapter;
+import kramnik.bartlomiej.clouddriveclient.View.ShowLogs.ShowLogsActivity;
 
 /**
  * Dagger component
@@ -35,4 +37,8 @@ public interface AppComponent {
     void inject(FilterDialog dialog);
 
     void inject(CreateFolderDialog dialog);
+
+    void inject(LogsListAdapter adapter);
+
+    void inject(ShowLogsActivity activity);
 }

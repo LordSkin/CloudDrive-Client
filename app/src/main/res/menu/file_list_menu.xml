@@ -12,4 +12,10 @@
         android:title="@string/filter"
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/showLogs"
+        android:icon="@drawable/clock"
+        android:title="@string/history"
+        app:showAsAction="always"/>
+
 </menu>
